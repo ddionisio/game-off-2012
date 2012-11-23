@@ -19,6 +19,7 @@ public class ItemStar : Entity, Entity.IListener {
 	
 	public int numBounce;
 	
+	public float throwFadeOffDelay; //decay after thrown
 	public float fadeOffDelay; //when do we start disappearing?
 	public float dyingDelay; //duration of disappear
 	
@@ -151,9 +152,9 @@ public class ItemStar : Entity, Entity.IListener {
 		action = Entity.Action.idle;
 	}
 	
-	void Decay() {
+	void Decay(float delay) {
 		mCurFadeTime += Time.deltaTime;
-		if(mCurFadeTime >= fadeOffDelay || mCurBounce >= numBounce) {
+		if(mCurFadeTime >= delay || mCurBounce >= numBounce) {
 			mCurFadeTime = 0;
 			mSprite.color = deathColor;
 			mLifeState = LifeState.Dying;
@@ -163,13 +164,13 @@ public class ItemStar : Entity, Entity.IListener {
 	void LateUpdate () {
 		switch(mLifeState) {
 		case LifeState.Active:
-			Decay();
+			Decay(fadeOffDelay);
 			break;
 			
 		case LifeState.Thrown:
 			
 			
-			Decay();
+			Decay(throwFadeOffDelay);
 			break;
 			
 		case LifeState.Dying:

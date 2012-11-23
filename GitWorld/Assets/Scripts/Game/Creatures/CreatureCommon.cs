@@ -4,7 +4,23 @@ using System.Collections;
 public class CreatureCommon : Entity, Entity.IListener {
 	public string afterSpawnAIState; //set ai state to this after spawning
 	
+	public float hurtDelay = 1.0f;
+	
+	public float stunDelay = 3; //set to zero for no stun, die right away. use for certain enemies
+	public float reviveDelay = 2; 
+	public float dieDelay = 2;
+	
+	public bool applyGravity = true;
+	
 	private AIController mAI;
+	
+	private string mLastAIState;
+	
+	private float mCurEnemyTime = 0;
+	
+	private Vector2 mPrevVelocity;
+	
+	private bool mHurt = false;
 	
 	protected override void Awake() {
 		base.Awake();
@@ -18,7 +34,7 @@ public class CreatureCommon : Entity, Entity.IListener {
 	
 	// Use this for initialization
 	protected override void Start () {
-		mCollideLayerMask = Main.layerMaskPlayerProjectile;
+		ResetCommonData();
 		
 		base.Start();
 	}
@@ -29,6 +45,8 @@ public class CreatureCommon : Entity, Entity.IListener {
 	protected virtual void OnGrabDone(PlayerGrabber grabber) {
 		planetAttach.enabled = false;
 		grabber.Retract(true);
+		
+		action = Entity.Action.grabbed;
 	}
 	
 	protected virtual void OnGrabRetractStart(PlayerGrabber grabber) {
@@ -36,19 +54,100 @@ public class CreatureCommon : Entity, Entity.IListener {
 	}
 	
 	protected virtual void OnGrabRetractEnd(PlayerGrabber grabber) {
-		//get eaten
+		//get eaten, let player know
+		
+		Die();
 	}
 	
 	public void OnEntityAct(Action act) {
+		Debug.Log("enemy: "+name+" acting: "+act);
+		
+		switch(act) {
+		case Action.spawning:
+			ResetCommonData();
+			break;
+			
+		case Action.idle:
+			//caution: we are also set here after revived, don't really need to do anything here...
+			break;
+			
+		case Action.hurt:
+			Invulnerable(hurtDelay);
+			
+			mPrevVelocity = planetAttach.velocity;
+			planetAttach.velocity = Vector2.zero;
+			
+			mAI.SequenceSetPause(true);
+			break;
+			
+		case Action.reviving:
+			mCurEnemyTime = 0;
+			break;
+			
+		case Action.revived:
+			string playAIState = mLastAIState;
+			
+			ResetCommonData();
+			
+			if(stats != null) {
+				stats.ResetStats();
+			}
+			
+			action = Entity.Action.idle;
+			
+			if(!string.IsNullOrEmpty(playAIState)) {
+				mAI.SequenceSetState(playAIState);
+			}
+			break;
+			
+		case Action.stunned:
+			//stop activity and become edible
+			mLastAIState = mAI.curState;
+			mAI.SequenceStop();
+			planetAttach.velocity = Vector2.zero;
+			planetAttach.applyGravity = true;
+			mCollideLayerMask = 0;
+			gameObject.layer = Main.layerItem;
+			mReticle = Reticle.Type.Eat;
+			
+			mCurEnemyTime = 0;
+			break;
+			
+		case Action.die:
+			mCurEnemyTime = 0;
+			break;
+		}
 	}
 	
 	public void OnEntityInvulnerable(bool yes) {
 		mCollideLayerMask = yes ? 0 : Main.layerMaskPlayerProjectile;
+		
+		//after invul wears off and we are hurt, resume activity
+		if(!yes && action == Entity.Action.hurt) {
+			action = prevAction;
+			planetAttach.velocity = mPrevVelocity;
+			
+			mAI.SequenceSetPause(false);
+		}
 	}
 	
 	public void OnEntityCollide(Entity other, bool youAreReceiver) {
 		GameObject go = other.gameObject;
-		if(youAreReceiver && go.layer == Main.layerPlayerProjectile) {
+		if(youAreReceiver && go.layer == Main.layerPlayerProjectile && !FlagsCheck(Entity.Flag.Invulnerable)) {
+			if(stats != null && other.stats != null) {
+				stats.ApplyDamage(other.stats);
+				if(stats.curHP == 0) {
+					if(stunDelay > 0) {
+						action = Entity.Action.stunned;
+					}
+					else {
+						action = Entity.Action.die;
+					}
+				}
+				else {
+					action = Entity.Action.hurt;
+				}
+			}
 		}
 	}
 	
@@ -58,29 +157,47 @@ public class CreatureCommon : Entity, Entity.IListener {
 		}
 	}
 	
-	/*void OnGrabThrow(PlayerGrabber grabber) {
-		transform.parent = mPrevParent;
-		mPrevParent = null;
-		
-		planetAttach.enabled = true;
-		planetAttach.RefreshPos();
-		mThrown = true;
-		
-		//mPlanetAttach.applyGravity = false;
-		
-		//compute velocity in planet space
-		Vector2 dir = planetAttach.ConvertToPlanetDir(grabber.head.up);
-		
-		mThrowVel = dir*throwSpeed;
-		if(Mathf.Sign(dir.x) == Mathf.Sign(grabber.thePlayer.planetAttach.planetDir.x)) {
-			mThrowVel += grabber.thePlayer.planetAttach.velocity;
-		}
-		
-		if(grabber.thePlayer.planetAttach.GetCurYVel() > 0) {
-			mThrowVel.y += grabber.thePlayer.planetAttach.GetCurYVel();
-		}
-	}*/
+	void OnPlanetLand(PlanetAttach pa) {
+	}
+	
+	void ResetCommonData() {
+		mCollideLayerMask = Main.layerMaskPlayerProjectile;
+		gameObject.layer = Main.layerEnemy;
+		mReticle = Reticle.Type.NumType;
+		mCurEnemyTime = 0;
+		mPrevVelocity = Vector2.zero;
+		mLastAIState = null;
+		mHurt = false;
+		planetAttach.applyGravity = applyGravity;
+	}
 	
 	void LateUpdate () {
+		switch(action) {
+		case Action.stunned:
+			mCurEnemyTime += Time.deltaTime;
+			if(mCurEnemyTime >= stunDelay) {
+				action = Entity.Action.reviving;
+			}
+			break;
+			
+		case Action.reviving:
+			mCurEnemyTime += Time.deltaTime;
+			if(mCurEnemyTime >= reviveDelay) {
+				action = Entity.Action.revived;
+			}
+			break;
+			
+		case Action.die:
+			mCurEnemyTime += Time.deltaTime;
+			if(mCurEnemyTime >= dieDelay) {
+				Die();
+			}
+			break;
+		}
+	}
+	
+	void Die() {
+		action = Entity.Action.NumActions;
+		EntityManager.instance.Release(transform);
 	}
 }

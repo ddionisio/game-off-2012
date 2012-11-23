@@ -15,12 +15,22 @@ public class AIController : MonoBehaviour {
 	
 	private Sequencer.StateInstance mStateInstance = null;
 	
+	private string mCurState;
+	
 	private bool mHasStarted = false;
+	
+	public string curState {
+		get {
+			return mCurState;
+		}
+	}
 	
 	public void SequenceStop() {
 		if(mStateInstance != null) {
 			mStateInstance.terminate = true;
 			mStateInstance = null;
+			
+			mCurState = null;
 		}
 	}
 	
@@ -32,6 +42,8 @@ public class AIController : MonoBehaviour {
 	
 	public void SequenceSetState(string state) {
 		SequenceStop();
+		
+		mCurState = state;
 		
 		mStateInstance = AIManager.instance.states.Start(this, state);
 	}

@@ -5,20 +5,21 @@ using System.Collections;
 public class SpriteEntityController : MonoBehaviour, Entity.IListener {
 	public float invulBlinkDelay = 0.05f;
 	
-	private tk2dBaseSprite mSprite;
-	private tk2dAnimatedSprite mSpriteAnim;
+	protected tk2dBaseSprite mSprite;
+	protected tk2dAnimatedSprite mSpriteAnim;
+	
 	private Color mPrevColor;
 	private int[] mActionAnimIds;
 	
 	private bool mInvulDoBlink = false;
 	private float mInvulCurTime = 0.0f;
 	
-	void Awake() {
+	protected virtual void Awake() {
 		mSprite = GetComponent<tk2dBaseSprite>();
 		mSpriteAnim = mSprite as tk2dAnimatedSprite;
 	}
 	
-	void Start() {
+	protected virtual void Start() {
 		if(mSpriteAnim != null) {
 			mActionAnimIds = new int[(int)Entity.Action.NumActions];
 			for(int i = 0; i < mActionAnimIds.Length; i++) {
@@ -27,7 +28,7 @@ public class SpriteEntityController : MonoBehaviour, Entity.IListener {
 		}
 	}
 	
-	void Update() {
+	protected virtual void Update() {
 		if(mInvulDoBlink) {
 			mInvulCurTime += Time.deltaTime;
 			if(mInvulCurTime >= invulBlinkDelay) {
@@ -40,7 +41,7 @@ public class SpriteEntityController : MonoBehaviour, Entity.IListener {
 		}
 	}
 
-	public void OnEntityAct(Entity.Action act) {
+	public virtual void OnEntityAct(Entity.Action act) {
 		if(mSpriteAnim != null) {
 			int id = mActionAnimIds[(int)act];
 			if(id != -1) {
@@ -49,7 +50,7 @@ public class SpriteEntityController : MonoBehaviour, Entity.IListener {
 		}
 	}
 	
-	public void OnEntityInvulnerable(bool yes) {
+	public virtual void OnEntityInvulnerable(bool yes) {
 		mInvulDoBlink = yes;
 		if(yes) {
 			mPrevColor = mSprite.color;
@@ -60,9 +61,9 @@ public class SpriteEntityController : MonoBehaviour, Entity.IListener {
 		}
 	}
 	
-	public void OnEntityCollide(Entity other, bool youAreReceiver) {
+	public virtual void OnEntityCollide(Entity other, bool youAreReceiver) {
 	}
 	
-	public void OnEntitySpawnFinish() {
+	public virtual void OnEntitySpawnFinish() {
 	}
 }

@@ -5,7 +5,8 @@ public class Entity : MonoBehaviour {
 	public enum Action {
 		idle,
 		spawning, //once finish, calls OnEntitySpawnFinish to listeners
-		alive,
+		reviving,
+		revived,
 		hurt,
 		die,
 		move,
@@ -39,6 +40,7 @@ public class Entity : MonoBehaviour {
 	private Flag mFlags = Flag.None;
 	
 	private Action mCurAct = Action.NumActions;
+	private Action mPrevAct = Action.NumActions;
 	
 	private EntityStats mStats;
 	private PlanetAttach mPlanetAttach;
@@ -67,12 +69,19 @@ public class Entity : MonoBehaviour {
 		}
 	}
 	
+	public Action prevAction {
+		get {
+			return mPrevAct;
+		}
+	}
+	
 	public Action action {
 		get {
 			return mCurAct;
 		}
 		set {
 			if(mCurAct != value) {
+				mPrevAct = mCurAct;
 				mCurAct = value;
 				if(mCurAct != Action.NumActions) {
 					foreach(IListener l in mListeners) {
@@ -81,6 +90,18 @@ public class Entity : MonoBehaviour {
 				}
 			}
 		}
+	}
+	
+	public void YieldSetAction(Action act) {
+		StartCoroutine(OnYieldAction(act));
+	}
+	
+	IEnumerator OnYieldAction(Action act) {
+		yield return new WaitForFixedUpdate();
+		
+		action = act;
+		
+		yield break;
 	}
 	
 	public void FlagsAdd(Flag flag) {

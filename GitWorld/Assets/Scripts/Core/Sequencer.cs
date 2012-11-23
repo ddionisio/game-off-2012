@@ -37,28 +37,48 @@ public class Sequencer {
 			int i = 0;
 			int len = actions.Count;
 			while(!stateInstance.terminate && i < len) {
-				if(stateInstance.pause) {
-					yield return new WaitForFixedUpdate();
-					continue;
-				}
-				
 				SequencerAction action = actions[i];
 				
 				if(action.delay > 0) {
 					yield return new WaitForSeconds(action.delay);
 				}
 				
-				action.Start(behaviour);
-				
-				while(!stateInstance.terminate && !action.Update(behaviour)) {
+				//ensure nothing is started when we pause or terminate early
+				while(stateInstance.pause) {
 					yield return new WaitForFixedUpdate();
+					
+					if(stateInstance.terminate)
+						break;
+					else
+						continue;
 				}
 				
-				action.Finish(behaviour);
-				
-				i++;
-				if(loop && i == len) {
-					i = 0;
+				if(!stateInstance.terminate) {
+					action.Start(behaviour);
+					
+					while(!stateInstance.terminate && !action.Update(behaviour)) {
+						yield return new WaitForFixedUpdate();
+						
+						//ensure we wait until unpaused before updating again
+						//warning: state from start might change.........
+						//look at this comment if shit hits the fan in game
+						//however...we don't want finish or update to happen when we
+						//rely on certain state to be consistent outside...
+						while(!stateInstance.terminate && stateInstance.pause) {
+							yield return new WaitForFixedUpdate();
+							continue;
+						}
+					}
+					
+					action.Finish(behaviour);
+					
+					i++;
+					if(loop && i == len) {
+						i = 0;
+					}
+				}
+				else {
+					break;
 				}
 			}
 		}

@@ -55,7 +55,7 @@ public class PlanetAttachStatic : MonoBehaviour {
 			return mPlanetDir;
 		}
 	}
-	
+		
 	public Vector2 ConvertToPlanetDir(Vector3 dir) {
 		//ew
 		Vector2 _dpos = transform.position + dir;
