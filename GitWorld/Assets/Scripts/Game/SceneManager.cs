@@ -12,6 +12,8 @@ public class SceneManager : MonoBehaviour {
 	public const string levelString = "level";
 	
 	private SceneController mSceneController;
+	private string mCurLevel;
+	private float mPrevTimeScale;
 	
 	public SceneController sceneController {
 		get {
@@ -38,9 +40,34 @@ public class SceneManager : MonoBehaviour {
 	}
 	
 	public void LoadLevel(int level) {
-		LoadScene(levelString+level);
+		mCurLevel = levelString+level;
+		LoadScene(mCurLevel);
 	}
 	
+	public void ReloadLevel() {
+		if(!string.IsNullOrEmpty(mCurLevel)) {
+			LoadScene(mCurLevel);
+		}
+	}
+	
+	public void Pause() {
+		if(Time.timeScale != 0.0f) {
+			mPrevTimeScale = Time.timeScale;
+			Time.timeScale = 0.0f;
+		}
+		
+		BroadcastMessage("OnScenePause", null, SendMessageOptions.DontRequireReceiver);
+	}
+	
+	public void Resume() {
+		Time.timeScale = mPrevTimeScale;
+		
+		BroadcastMessage("OnSceneResume", null, SendMessageOptions.DontRequireReceiver);
+	}
+	
+	/// <summary>
+	/// Internal use only. Called at OnLevelWasLoaded in SceneManager or in Main (for debug/dev)
+	/// </summary>
 	public void InitScene() {
 		if(mSceneController == null) {
 			mSceneController = (SceneController)Object.FindObjectOfType(typeof(SceneController));
@@ -55,5 +82,6 @@ public class SceneManager : MonoBehaviour {
 	}
 	
 	void Awake() {
+		mPrevTimeScale = Time.timeScale;
 	}
 }

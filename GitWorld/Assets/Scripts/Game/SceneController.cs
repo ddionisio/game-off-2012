@@ -15,6 +15,8 @@ public class SceneController : MonoBehaviour {
 		return GameObject.Find(mRootPath+path);
 	}
 	
+	
+	
 	void Start() {
 		if(sequencer != null) {
 			//Sequencer.StateInstance

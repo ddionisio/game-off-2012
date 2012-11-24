@@ -58,6 +58,15 @@ public class CameraController : MonoBehaviour {
 		}
 	}
 	
+	public void Reset() {
+		mAttach = null;
+		mOrigin = null;
+		mCurMode = Mode.Free;
+		transform.localPosition = new Vector3(0,0,transform.localPosition.z);
+		transform.rotation = Quaternion.identity;
+		transform.localScale = Vector3.one;
+	}
+	
 	public float originMinDistance {
 		get {
 			return mOriginMinDistance;
@@ -68,8 +77,7 @@ public class CameraController : MonoBehaviour {
 	}
 	
 	void SceneShutdown() {
-		mAttach = null;
-		mOrigin = null;
+		Reset();
 	}
 	
 	void Awake() {

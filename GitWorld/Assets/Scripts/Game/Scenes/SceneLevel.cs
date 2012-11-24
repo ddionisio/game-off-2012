@@ -49,4 +49,18 @@ public class SceneLevel : SceneController {
 	
 	public void OnEntityRelease(Entity e) {
 	}
+	
+	void Update() {
+		if(Input.GetButtonDown("Menu")) {
+			UIManager uimgr = Main.instance.uiManager;
+			if(uimgr.ModalGetTop() == UIManager.Modal.GameOptions) {
+				Main.instance.sceneManager.Resume();
+				uimgr.ModalCloseTop();
+			}
+			else if(uimgr.ModalGetTop() == UIManager.Modal.NumModal) {
+				Main.instance.sceneManager.Pause();
+				uimgr.ModalOpen(UIManager.Modal.GameOptions);
+			}
+		}
+	}
 }

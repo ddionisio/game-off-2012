@@ -283,37 +283,43 @@ public class PlayerGrabber : MonoBehaviour {
 	}
 	
 	void Update () {
-		switch(mCurState) {
-		case State.None:
-			if(!mDisable) {
-				LookAtMouse();
+		if(!mDisable) {
+			switch(mCurState) {
+			case State.None:
+				if(!mDisable) {
+					LookAtMouse();
+					
+					if(mGrabTarget == null) {
+						RefreshReticles();
+						GrabFromMouse();
+					}
+					else {
+						GrabThrow();
+					}
+				}
+				break;
 				
-				if(mGrabTarget == null) {
-					RefreshReticles();
-					GrabFromMouse();
-				}
-				else {
-					GrabThrow();
-				}
+			case State.Holding:
+				LookAtMouse();
+				break;
+				
+			case State.Grabbing:
+				GrabbingUpdate(true, false);
+				break;
+				
+			case State.Grabbed:
+				GrabbingUpdate(false, false);
+				break;
+				
+			case State.Retracting:
+				GrabbingUpdate(true, true);
+				break;
 			}
-			break;
-			
-		case State.Holding:
-			LookAtMouse();
-			break;
-			
-		case State.Grabbing:
-			GrabbingUpdate(true, false);
-			break;
-			
-		case State.Grabbed:
-			GrabbingUpdate(false, false);
-			break;
-			
-		case State.Retracting:
-			GrabbingUpdate(true, true);
-			break;
 		}
+	}
+	
+	void OnPlayerDeath() {
+		mDisable = true;
 	}
 	
 	void OnUIModalActive() {

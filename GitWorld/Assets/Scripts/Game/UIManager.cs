@@ -9,6 +9,8 @@ public class UIManager : MonoBehaviour {
 		LevelSelect,
 		HowToPlay,
 		Victory,
+		GameOver,
+		Confirm,
 		
 		NumModal
 	}
@@ -18,6 +20,9 @@ public class UIManager : MonoBehaviour {
 		public string name;
 		public UIController ui;
 		public bool exclusive = true; //hide modals behind
+		
+		[System.NonSerializedAttribute]
+		public Modal type;
 	}
 	
 	public UIData[] uis;
@@ -29,6 +34,14 @@ public class UIManager : MonoBehaviour {
 		get {
 			return mHUD;
 		}
+	}
+	
+	public Modal ModalGetTop() {
+		Modal ret = Modal.NumModal;
+		if(mModalStack.Count > 0) {
+			ret = mModalStack.Peek().type;
+		}
+		return ret;
 	}
 	
 	//closes all modal and open this
@@ -46,6 +59,7 @@ public class UIManager : MonoBehaviour {
 		if(mModalStack.Count > 0) {
 			UIData uid = mModalStack.Pop();
 			UIController ui = uid.ui;
+			ui.OnShow(false);
 			ui.OnClose();
 			ui.gameObject.SetActiveRecursively(false);
 			
@@ -100,6 +114,7 @@ public class UIManager : MonoBehaviour {
 		if(mModalStack.Count > 0) {
 			foreach(UIData uid in mModalStack) {
 				UIController ui = uid.ui;
+				ui.OnShow(false);
 				ui.OnClose();
 				ui.gameObject.SetActiveRecursively(false);
 			}
@@ -124,12 +139,15 @@ public class UIManager : MonoBehaviour {
 	}
 	
 	void Awake() {
-		//deactivate all uis
-		foreach(UIData uid in uis) {
+		//setup data and deactivate object
+		for(int i = 0; i < uis.Length; i++) {
+			UIData uid = uis[i];
 			UIController ui = uid.ui;
 			if(ui != null) {
 				ui.gameObject.SetActiveRecursively(false);
 			}
+			
+			uid.type = (Modal)i;//System.Enum.Parse(typeof(Modal), uid.name);
 		}
 		
 		mHUD = GetComponentInChildren<HUDInterface>();

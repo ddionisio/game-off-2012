@@ -16,6 +16,8 @@ public class Player : Entity, Entity.IListener {
 	/// <summary> For jumping (m/s) </summary>
 	public float jumpSpeed;
 	
+	public float deathDelay = 2.0f; //delay to bring game over menu up
+	
 	private PlayerController mController;
 	
 	private float mPlayerCurTime;
@@ -67,6 +69,14 @@ public class Player : Entity, Entity.IListener {
 				action = Entity.Action.idle;
 			}
 			break;
+			
+		case Action.die:
+			mPlayerCurTime += Time.deltaTime;
+			if(mPlayerCurTime >= deathDelay) {
+				Main.instance.uiManager.ModalOpen(UIManager.Modal.GameOver);
+				action = Entity.Action.NumActions;
+			}
+			break;
 		}
 	}
 	
@@ -85,8 +95,15 @@ public class Player : Entity, Entity.IListener {
 			break;
 			
 		case Action.hurt:
+			mPlayerCurTime = 0.0f;
 			Invulnerable(hurtInvulDelay);
 			mController.enabled = false;
+			break;
+			
+		case Action.die:
+			mPlayerCurTime = 0.0f;
+			mController.enabled = false;
+			BroadcastMessage("OnPlayerDeath", null, SendMessageOptions.DontRequireReceiver);
 			break;
 		}
 	}
@@ -98,11 +115,12 @@ public class Player : Entity, Entity.IListener {
 	public void OnEntityCollide(Entity other, bool youAreReceiver) {
 		GameObject go = other.gameObject;
 		if(youAreReceiver && ((go.layer == Main.layerEnemy && other.action != Entity.Action.hurt) || go.layer == Main.layerProjectile)) {
-			mPlayerCurTime = 0.0f;
-			
 			stats.ApplyDamage(other.stats);
 			if(stats.curHP == 0) {
 				//dead!
+				action = Entity.Action.die;
+				
+				planetAttach.velocity = Vector2.zero;
 			}
 			else {
 				//get hurt

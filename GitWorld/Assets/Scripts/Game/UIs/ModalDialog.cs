@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class UIDialog : MonoBehaviour {
+public class ModalDialog : UIController {
 
 	// Use this for initialization
 	void Start () {

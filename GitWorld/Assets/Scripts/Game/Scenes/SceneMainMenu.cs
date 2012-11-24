@@ -5,7 +5,6 @@ public class SceneMainMenu : SceneController {
 
 	// Use this for initialization
 	void SceneStart() {
-		
 		Main.instance.uiManager.hud.gameObject.SetActiveRecursively(false);
 		Main.instance.uiManager.ModalOpen(UIManager.Modal.Start);
 	}

@@ -11,6 +11,9 @@ public class AIController : MonoBehaviour {
 	[System.NonSerialized]
 	public Vector2 curPlanetDir;
 	
+	[System.NonSerialized]
+	public float lastTime; //use this for waiting
+	
 	public string startState;
 	
 	private Sequencer.StateInstance mStateInstance = null;

@@ -142,6 +142,8 @@ public class ReticleManager : MonoBehaviour {
 		foreach(Transform c in transform) {
 			Object.Destroy(c.gameObject);
 		}
+		
+		mActiveReticles.Clear();
 	}
 	
 	void SceneShutdown() {

@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 using System.Text.RegularExpressions;
 
-public class UILevelSelect : UIController {
+public class ModalLevelSelect : UIController {
 	public UIEventListener[] buttonLevels;
 	
 	public UIEventListener buttonBack;

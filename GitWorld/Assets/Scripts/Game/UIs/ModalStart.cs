@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class UIStart : UIController {
+public class ModalStart : UIController {
 	public UIEventListener buttonStart;
 	public UIEventListener buttonHowTo;
 	
