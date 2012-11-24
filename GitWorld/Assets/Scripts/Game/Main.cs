@@ -6,15 +6,19 @@ public class Main : MonoBehaviour {
 	//only use these after awake
 	public static int layerPlayer;
 	public static int layerEnemy;
+	public static int layerEnemyComplex;
 	public static int layerProjectile;
 	public static int layerItem;
 	public static int layerPlayerProjectile;
+	public static int layerEnemyNoPlayerProjectile;
 	
 	public static int layerMaskPlayer;
 	public static int layerMaskEnemy;
+	public static int layerMaskEnemyComplex;
 	public static int layerMaskProjectile;
 	public static int layerMaskItem;
 	public static int layerMaskPlayerProjectile;
+	public static int layerMaskEnemyNoPlayerProjectile;
 	
 	public TextAsset stringAsset;
 	
@@ -60,15 +64,19 @@ public class Main : MonoBehaviour {
 		
 		layerPlayer = LayerMask.NameToLayer("Player");
 		layerEnemy = LayerMask.NameToLayer("Enemy");
+		layerEnemyComplex = LayerMask.NameToLayer("EnemyComplex");
 		layerProjectile = LayerMask.NameToLayer("Projectile");
 		layerItem = LayerMask.NameToLayer("Item");
 		layerPlayerProjectile = LayerMask.NameToLayer("PlayerProjectile");
+		layerEnemyNoPlayerProjectile = LayerMask.NameToLayer("EnemyNoPlayerProjectile");
 		
 		layerMaskPlayer = 1<<layerPlayer;
 		layerMaskEnemy = 1<<layerEnemy;
+		layerMaskEnemyComplex = 1<<layerEnemyComplex;
 		layerMaskProjectile = 1<<layerProjectile;
 		layerMaskItem = 1<<layerItem;
 		layerMaskPlayerProjectile = 1<<layerPlayerProjectile;
+		layerMaskEnemyNoPlayerProjectile = 1<<layerEnemyNoPlayerProjectile;
 		
 		DontDestroyOnLoad(gameObject);
 		

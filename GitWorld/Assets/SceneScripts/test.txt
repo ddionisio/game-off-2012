@@ -1,13 +1,11 @@
 { "$type":"Sequencer"
 	"actions": [
+		{ "$type":"SceneActionSetWave",
+			"current":"0", "max":"5"
+		},
 		{ "$type":"SceneActionCamera",
 			"mode":"Attach",
 			"attachToPath":"entities/player"
-		},
-		{ "$type":"SceneActionSpawnEntity",
-			"type":"jumper",
-			"name":"spunky",
-			"waypoint":"spawn_1"
 		},
 		{ "$type":"SceneActionAnnounce",
 			"delay":"2"
@@ -18,8 +16,23 @@
 			"message":"Be Excellent to each other."
 		},
 		{ "$type":"SceneActionAnnounce",
-			"delay":"10",
-			"state":"FadeOut"
+			"delay":"4",
+			"state":"FadeScaleOut"
+		},
+		{ "$type":"SceneActionSpawnEntity",
+			"type":"jumper",
+			"name":"spunky",
+			"waypoint":"spawn_1"
+		},
+		{ "$type":"SceneActionSetWave",
+			"current":"1", "max":"5"
+		},
+		{ "$type":"SceneActionWaitEnemyCount",
+			"delay":"1"
+		},
+		{ "$type":"SequencerActionChangeState",
+			"delay":"5",
+			"state":"victory"
 		}
 	]
 }

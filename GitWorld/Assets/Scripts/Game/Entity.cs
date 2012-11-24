@@ -14,6 +14,7 @@ public class Entity : MonoBehaviour {
 		jump,
 		grabbed,
 		stunned,
+		victory,
 		
 		NumActions
 	}
@@ -136,6 +137,10 @@ public class Entity : MonoBehaviour {
 		foreach(IListener l in mListeners) {
 			l.OnEntityInvulnerable(true);
 		}
+	}
+	
+	public virtual bool CanHarmPlayer() {
+		return false;
 	}
 	
 	/// <summary>

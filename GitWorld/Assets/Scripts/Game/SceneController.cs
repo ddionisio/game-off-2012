@@ -9,18 +9,24 @@ public class SceneController : MonoBehaviour {
 	public SequencerState sequencer;
 	
 	private string mRootPath;
+	private Sequencer.StateInstance mStateInstance = null;
 	
 	//only call these during inits
 	public GameObject SearchObject(string path) {
 		return GameObject.Find(mRootPath+path);
 	}
 	
-	
+	void SequenceChangeState(string state) {
+		if(mStateInstance != null) {
+			mStateInstance.terminate = true;
+		}
+		mStateInstance = sequencer.Start(this, state);
+	}
 	
 	void Start() {
 		if(sequencer != null) {
 			//Sequencer.StateInstance
-			sequencer.Start(this);
+			mStateInstance = sequencer.Start(this);
 		}
 	}
 	

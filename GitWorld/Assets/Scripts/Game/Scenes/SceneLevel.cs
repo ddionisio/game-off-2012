@@ -35,11 +35,21 @@ public class SceneLevel : SceneController {
 		mPlanet = GetComponentInChildren<Planet>();
 		
 		Main.instance.uiManager.hud.gameObject.SetActiveRecursively(true);
+		
+		Main.instance.uiManager.hud.score.score = 0;
+		
 		Main.instance.uiManager.hud.playerStatus.SetStats(mPlayer.stats);
+		Main.instance.uiManager.hud.bossStatus.gameObject.SetActiveRecursively(false); //...
 	}
 	
 	public void SceneShutdown() {
+		//
+		Main.instance.uiManager.hud.score.Clear();
+		Main.instance.uiManager.hud.wave.SetWave(0,0);
+		
 		Main.instance.uiManager.hud.playerStatus.SetStats(null);
+		Main.instance.uiManager.hud.bossStatus.SetStats(null);
+		
 		Main.instance.uiManager.hud.gameObject.SetActiveRecursively(false);
 	}
 	

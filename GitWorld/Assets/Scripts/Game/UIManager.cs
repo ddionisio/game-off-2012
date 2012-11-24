@@ -11,6 +11,7 @@ public class UIManager : MonoBehaviour {
 		Victory,
 		GameOver,
 		Confirm,
+		Dialog,
 		
 		NumModal
 	}
@@ -34,6 +35,17 @@ public class UIManager : MonoBehaviour {
 		get {
 			return mHUD;
 		}
+	}
+	
+	public bool ModalIsInStack(Modal modal) {
+		bool ret = false;
+		foreach(UIData uid in mModalStack) {
+			if(uid.type == modal) {
+				ret = true;
+				break;
+			}
+		}
+		return ret;
 	}
 	
 	public Modal ModalGetTop() {

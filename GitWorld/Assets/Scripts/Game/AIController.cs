@@ -50,6 +50,10 @@ public class AIController : MonoBehaviour {
 		
 		mStateInstance = AIManager.instance.states.Start(this, state);
 	}
+	
+	void SequenceChangeState(string state) {
+		SequenceSetState(state);
+	}
 		
 	void OnEnable() {
 		if(mHasStarted) { //during spawn

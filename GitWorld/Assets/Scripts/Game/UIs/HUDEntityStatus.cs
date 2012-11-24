@@ -14,6 +14,8 @@ public class HUDEntityStatus : MonoBehaviour {
 	public UILabel nameWidget;
 	public UISprite portraitWidget;
 	
+	public bool isHPFlipped = false;
+	
 	private List<HUDHitPoint> mHPs = new List<HUDHitPoint>();
 	private EntityStats mStats;
 	private int mCurHP;
@@ -56,6 +58,12 @@ public class HUDEntityStatus : MonoBehaviour {
 					containerLayout.Reposition();
 				}
 				
+				mHPs.Sort(delegate(HUDHitPoint h1, HUDHitPoint h2) {
+					Vector3 p1 = h1.transform.localPosition;
+					Vector3 p2 = h2.transform.localPosition;
+					return isHPFlipped ? Mathf.RoundToInt(p2.x-p1.x) : Mathf.RoundToInt(p1.x-p2.x);
+				});
+				
 				if(containerFrameLayout != null) {
 					containerFrameLayout.Reposition();
 				}
@@ -86,11 +94,11 @@ public class HUDEntityStatus : MonoBehaviour {
 	}
 	
 	void OnEnable() {
+		cacheContainer.gameObject.SetActiveRecursively(false);
 		if(mStats != null) {
 			RefreshStats(true);
 		}
 		else {
-			cacheContainer.gameObject.SetActiveRecursively(false);
 			Clear();
 		}
 	}

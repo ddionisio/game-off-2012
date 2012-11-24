@@ -35,9 +35,14 @@ public class Player : Entity, Entity.IListener {
 	}
 
 	protected override void SceneStart() {
-		mCollideLayerMask = Main.layerMaskEnemy | Main.layerMaskProjectile;
+		SetDefaultCollideMask();
 		
 		base.SceneStart();
+	}
+	
+	void SetDefaultCollideMask() {
+		mCollideLayerMask = Main.layerMaskEnemy | Main.layerMaskEnemyComplex 
+			| Main.layerEnemyNoPlayerProjectile | Main.layerMaskProjectile;
 	}
 				
 	public void OnGrabStart() {
@@ -81,6 +86,7 @@ public class Player : Entity, Entity.IListener {
 	}
 	
 	void OnUIModalActive() {
+		planetAttach.velocity.x = 0;
 		mController.enabled = false;
 	}
 	
@@ -109,12 +115,16 @@ public class Player : Entity, Entity.IListener {
 	}
 	
 	public void OnEntityInvulnerable(bool yes) {
-		mCollideLayerMask = yes ? 0 : Main.layerMaskEnemy | Main.layerMaskProjectile;
+		if(yes) {
+			mCollideLayerMask = 0;
+		}
+		else {
+			SetDefaultCollideMask();
+		}
 	}
 	
 	public void OnEntityCollide(Entity other, bool youAreReceiver) {
-		GameObject go = other.gameObject;
-		if(youAreReceiver && ((go.layer == Main.layerEnemy && other.action != Entity.Action.hurt) || go.layer == Main.layerProjectile)) {
+		if(youAreReceiver && other.CanHarmPlayer()) {
 			stats.ApplyDamage(other.stats);
 			if(stats.curHP == 0) {
 				//dead!
@@ -149,5 +159,10 @@ public class Player : Entity, Entity.IListener {
 	void OnSceneActivate(bool activate) {
 		mController.enabled = activate;
 		planetAttach.applyGravity = activate;
+		
+		if(!activate) {
+			planetAttach.velocity = Vector2.zero;
+			planetAttach.ResetCurYVel();
+		}
 	}
 }

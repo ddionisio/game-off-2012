@@ -85,6 +85,7 @@ public class ItemStar : Entity, Entity.IListener {
 		mCurFadeTime = 0;
 		
 		gameObject.layer = Main.layerPlayerProjectile;
+		mCollideLayerMask = Main.layerMaskEnemyComplex;
 		
 		planetAttach.applyOrientation = false;
 		
@@ -122,6 +123,7 @@ public class ItemStar : Entity, Entity.IListener {
 			planetAttach.applyOrientation = true;
 			planetAttach.applyGravity = false;
 			gameObject.layer = Main.layerItem;
+			mCollideLayerMask = 0;
 			mReticle = Reticle.Type.Grab;
 			mSprite.color = Color.white;
 			mSprite.scale = Vector3.one;
@@ -134,7 +136,8 @@ public class ItemStar : Entity, Entity.IListener {
 	
 	public void OnEntityCollide(Entity other, bool youAreReceiver) {
 		//bouncing off enemy who received our 'star'tling blow! (har har!)
-		if(!youAreReceiver && mCurBounce < numBounce && mLifeState == LifeState.Thrown) {
+		if((!youAreReceiver || mCollideLayerMask == Main.layerMaskEnemyComplex)
+			&& mCurBounce < numBounce && mLifeState == LifeState.Thrown) {
 			Vector2 vel = planetAttach.velocity;
 			vel.x *= -1;
 			planetAttach.velocity = vel;

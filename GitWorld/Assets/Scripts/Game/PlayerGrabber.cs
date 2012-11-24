@@ -319,7 +319,8 @@ public class PlayerGrabber : MonoBehaviour {
 	}
 	
 	void OnPlayerDeath() {
-		mDisable = true;
+		neck.gameObject.SetActiveRecursively(false);
+		gameObject.SetActiveRecursively(false);
 	}
 	
 	void OnUIModalActive() {

@@ -14,7 +14,7 @@ public class SceneActionAnnounce : SequencerAction {
 		HUDAnnounce ha = Main.instance.uiManager.hud.announce;
 		
 		if(state != HUDAnnounce.State.None) {
-			if(state != HUDAnnounce.State.FadeOut || message.Length > 0) {
+			if((state != HUDAnnounce.State.FadeOut && state != HUDAnnounce.State.FadeScaleOut) || message.Length > 0) {
 				ha.color = new Color(((float)colorR)/255.0f, ((float)colorG)/255.0f, ((float)colorB)/255.0f);
 				ha.message = message;
 			}

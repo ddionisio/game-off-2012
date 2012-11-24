@@ -11,6 +11,7 @@ public class CreatureCommon : Entity, Entity.IListener {
 	public float dieDelay = 2;
 	
 	public bool applyGravity = true;
+	public bool isComplex = false; //for bosses or large enemies with collision other than sphere
 	
 	private AIController mAI;
 	
@@ -131,7 +132,12 @@ public class CreatureCommon : Entity, Entity.IListener {
 	}
 	
 	public void OnEntityInvulnerable(bool yes) {
-		mCollideLayerMask = yes ? 0 : Main.layerMaskPlayerProjectile;
+		if(isComplex) {
+			gameObject.layer = yes ? Main.layerEnemyNoPlayerProjectile : Main.layerEnemyComplex;
+		}
+		else {
+			mCollideLayerMask = yes ? 0 : Main.layerMaskPlayerProjectile;
+		}
 		
 		//after invul wears off and we are hurt, resume activity
 		if(!yes && action == Entity.Action.hurt) {
@@ -144,7 +150,10 @@ public class CreatureCommon : Entity, Entity.IListener {
 	
 	public void OnEntityCollide(Entity other, bool youAreReceiver) {
 		GameObject go = other.gameObject;
-		if(youAreReceiver && go.layer == Main.layerPlayerProjectile && !FlagsCheck(Entity.Flag.Invulnerable)) {
+		bool doIt = isComplex ? !youAreReceiver : youAreReceiver;
+		doIt = doIt && go.layer == Main.layerPlayerProjectile && !FlagsCheck(Entity.Flag.Invulnerable);
+		
+		if(doIt) {
 			if(stats != null && other.stats != null) {
 				stats.ApplyDamage(other.stats);
 				if(stats.curHP == 0) {
@@ -168,12 +177,16 @@ public class CreatureCommon : Entity, Entity.IListener {
 		}
 	}
 	
+	public override bool CanHarmPlayer() {
+		return action != Entity.Action.hurt;
+	}
+	
 	void OnPlanetLand(PlanetAttach pa) {
 	}
 	
 	void ResetCommonData() {
-		mCollideLayerMask = Main.layerMaskPlayerProjectile;
-		gameObject.layer = Main.layerEnemy;
+		mCollideLayerMask = isComplex ? 0 : Main.layerMaskPlayerProjectile;
+		gameObject.layer = isComplex ? Main.layerEnemyComplex : Main.layerEnemy;
 		mReticle = Reticle.Type.NumType;
 		mCurEnemyTime = 0;
 		mPrevVelocity = Vector2.zero;
