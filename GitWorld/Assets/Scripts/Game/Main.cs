@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Main : MonoBehaviour {
 	//only use these after awake
@@ -14,21 +15,33 @@ public class Main : MonoBehaviour {
 	public static int layerMaskProjectile;
 	public static int layerMaskItem;
 	public static int layerMaskPlayerProjectile;
-			
-	public CameraController cameraController;
 	
-	public UserSettings userSettings;
-	public UserData userData;
+	public TextAsset stringAsset;
 	
-	public SceneManager sceneManager;
-	public ReticleManager reticleManager;
-	public UIManager uiManager;
+	[System.NonSerialized] public CameraController cameraController;
+	[System.NonSerialized] public UserSettings userSettings;
+	[System.NonSerialized] public UserData userData;
+	[System.NonSerialized] public SceneManager sceneManager;
+	[System.NonSerialized] public ReticleManager reticleManager;
+	[System.NonSerialized] public UIManager uiManager;
 	
 	private static Main mInstance = null;
+	
+	private Dictionary<string, object> mStringTable = null;
 	
 	public static Main instance {
 		get {
 			return mInstance;
+		}
+	}
+	
+	public Dictionary<string, object> strings {
+		get {
+			if(mStringTable == null) {
+				InitStrings();
+			}
+			
+			return mStringTable;
 		}
 	}
 	
@@ -41,7 +54,7 @@ public class Main : MonoBehaviour {
 	void OnApplicationQuit() {
 		mInstance = null;
 	}
-	
+			
 	void Awake() {
 		mInstance = this;
 		
@@ -67,6 +80,8 @@ public class Main : MonoBehaviour {
 		sceneManager = GetComponentInChildren<SceneManager>();
 		reticleManager = GetComponentInChildren<ReticleManager>();
 		uiManager = GetComponentInChildren<UIManager>();
+		
+		InitStrings();
 	}
 	
 	void Start() {
@@ -78,6 +93,14 @@ public class Main : MonoBehaviour {
 		}
 		else {
 			sceneManager.InitScene();
+		}
+	}
+	
+	void InitStrings() {
+		if(mStringTable == null) {
+			if(stringAsset != null) {
+				mStringTable = fastJSON.JSON.Instance.Parse(stringAsset.text) as Dictionary<string, object>;
+			}
 		}
 	}
 }

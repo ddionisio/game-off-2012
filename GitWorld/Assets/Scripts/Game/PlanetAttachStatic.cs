@@ -108,7 +108,7 @@ public class PlanetAttachStatic : MonoBehaviour {
 	}
 	
 	protected virtual void OnEnable() {
-		RefreshPos();
+		Start();
 	}
 	
 	protected virtual void Awake() {
@@ -121,8 +121,13 @@ public class PlanetAttachStatic : MonoBehaviour {
 	}
 	
 	protected virtual void Start() {
-		planet = SceneLevel.instance.planet.body;
+		if(planet == null && SceneLevel.instance != null && SceneLevel.instance.planet != null)
+			planet = SceneLevel.instance.planet.body;
 		
 		RefreshPos();
+	}
+	
+	void SceneStart() {
+		Start();
 	}
 }

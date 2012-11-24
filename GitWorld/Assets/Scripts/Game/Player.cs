@@ -32,11 +32,10 @@ public class Player : Entity, Entity.IListener {
 		base.OnEnable();
 	}
 
-	// Use this for initialization
-	protected override void Start () {
+	protected override void SceneStart() {
 		mCollideLayerMask = Main.layerMaskEnemy | Main.layerMaskProjectile;
 		
-		base.Start();
+		base.SceneStart();
 	}
 				
 	public void OnGrabStart() {

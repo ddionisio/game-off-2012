@@ -1,12 +1,12 @@
 using UnityEngine;
 using System.Collections;
 
-public class SceneStart : SceneController {
+public class SceneMainMenu : SceneController {
 
 	// Use this for initialization
-	protected override void Start () {
-		base.Start();
+	void SceneStart() {
 		
+		Main.instance.uiManager.hud.gameObject.SetActiveRecursively(false);
 		Main.instance.uiManager.ModalOpen(UIManager.Modal.Start);
 	}
 	

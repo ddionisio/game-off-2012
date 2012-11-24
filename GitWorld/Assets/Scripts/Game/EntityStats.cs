@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections;
 
 public class EntityStats : MonoBehaviour {
+	public string displayName; //name to display in hud
+	public string portrait;
+	
 	public int maxHP = 1;
 	
 	public int damage = 1;
@@ -23,7 +26,7 @@ public class EntityStats : MonoBehaviour {
 		}
 	}
 	
-	public void ResetStats() {
+	public virtual void ResetStats() {
 		mCurHP = maxHP;
 	}
 	

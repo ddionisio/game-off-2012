@@ -15,14 +15,14 @@ public class SceneController : MonoBehaviour {
 		return GameObject.Find(mRootPath+path);
 	}
 	
-	protected virtual void Start() {
+	void Start() {
 		if(sequencer != null) {
 			//Sequencer.StateInstance
 			sequencer.Start(this);
 		}
 	}
 	
-	protected virtual void Awake() {
+	void Awake() {
 		mRootPath = "/"+gameObject.name+"/";
 		
 		sequencer.Load();

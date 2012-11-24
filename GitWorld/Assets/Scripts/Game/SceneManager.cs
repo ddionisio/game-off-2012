@@ -44,6 +44,9 @@ public class SceneManager : MonoBehaviour {
 	public void InitScene() {
 		if(mSceneController == null) {
 			mSceneController = (SceneController)Object.FindObjectOfType(typeof(SceneController));
+			if(mSceneController != null) {
+				mSceneController.BroadcastMessage("SceneStart", null, SendMessageOptions.DontRequireReceiver);
+			}
 		}
 	}
 	

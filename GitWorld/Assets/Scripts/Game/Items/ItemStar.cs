@@ -39,9 +39,8 @@ public class ItemStar : Entity, Entity.IListener {
 		base.OnEnable();
 	}
 	
-	// Use this for initialization
-	protected override void Start () {
-		base.Start();
+	protected override void SceneStart() {
+		base.SceneStart();
 	}
 			
 	void OnGrabStart(PlayerGrabber grabber) {

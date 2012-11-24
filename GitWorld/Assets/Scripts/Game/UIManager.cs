@@ -23,6 +23,13 @@ public class UIManager : MonoBehaviour {
 	public UIData[] uis;
 			
 	private Stack<UIData> mModalStack = new Stack<UIData>((int)Modal.NumModal);
+	private HUDInterface mHUD;
+	
+	public HUDInterface hud {
+		get {
+			return mHUD;
+		}
+	}
 	
 	//closes all modal and open this
 	public void ModalReplace(Modal modal) {
@@ -124,5 +131,7 @@ public class UIManager : MonoBehaviour {
 				ui.gameObject.SetActiveRecursively(false);
 			}
 		}
+		
+		mHUD = GetComponentInChildren<HUDInterface>();
 	}
 }

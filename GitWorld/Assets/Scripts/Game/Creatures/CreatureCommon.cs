@@ -20,8 +20,6 @@ public class CreatureCommon : Entity, Entity.IListener {
 	
 	private Vector2 mPrevVelocity;
 	
-	private bool mHurt = false;
-	
 	protected override void Awake() {
 		base.Awake();
 		
@@ -33,10 +31,24 @@ public class CreatureCommon : Entity, Entity.IListener {
 	}
 	
 	// Use this for initialization
-	protected override void Start () {
+	protected override void SceneStart() {
 		ResetCommonData();
 		
-		base.Start();
+		base.SceneStart();
+	}
+	
+	public override void Spawn() {
+		ResetCommonData();
+		
+		base.Spawn();
+		
+		SceneLevel.instance.enemyCount++;
+	}
+	
+	public override void Release() {
+		base.Release();
+		
+		SceneLevel.instance.enemyCount--;
 	}
 			
 	//void OnGrabStart(PlayerGrabber grabber) {
@@ -56,15 +68,14 @@ public class CreatureCommon : Entity, Entity.IListener {
 	protected virtual void OnGrabRetractEnd(PlayerGrabber grabber) {
 		//get eaten, let player know
 		
-		Die();
+		Release();
 	}
 	
 	public void OnEntityAct(Action act) {
-		Debug.Log("enemy: "+name+" acting: "+act);
+		//Debug.Log("enemy: "+name+" acting: "+act);
 		
 		switch(act) {
 		case Action.spawning:
-			ResetCommonData();
 			break;
 			
 		case Action.idle:
@@ -167,7 +178,6 @@ public class CreatureCommon : Entity, Entity.IListener {
 		mCurEnemyTime = 0;
 		mPrevVelocity = Vector2.zero;
 		mLastAIState = null;
-		mHurt = false;
 		planetAttach.applyGravity = applyGravity;
 	}
 	
@@ -190,14 +200,9 @@ public class CreatureCommon : Entity, Entity.IListener {
 		case Action.die:
 			mCurEnemyTime += Time.deltaTime;
 			if(mCurEnemyTime >= dieDelay) {
-				Die();
+				Release();
 			}
 			break;
 		}
-	}
-	
-	void Die() {
-		action = Entity.Action.NumActions;
-		EntityManager.instance.Release(transform);
 	}
 }

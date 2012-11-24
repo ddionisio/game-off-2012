@@ -4,6 +4,9 @@ using System.Collections;
 public class Planet : MonoBehaviour {
 	public float cameraDistanceLimit;
 	
+	[System.NonSerialized]
+	public int enemyCount = 0;
+	
 	public PlanetBody body {
 		get {
 			return mPlanetBody;
@@ -14,6 +17,8 @@ public class Planet : MonoBehaviour {
 	
 	void Awake() {
 		mPlanetBody = GetComponent<PlanetBody>();
+		
+		enemyCount = 0;
 	}
 	
 	// Use this for initialization

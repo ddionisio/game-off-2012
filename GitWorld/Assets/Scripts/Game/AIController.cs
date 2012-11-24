@@ -49,8 +49,8 @@ public class AIController : MonoBehaviour {
 	}
 		
 	void OnEnable() {
-		if(mHasStarted) {
-			Start();
+		if(mHasStarted) { //during spawn
+			SceneStart();
 		}
 	}
 	
@@ -63,7 +63,7 @@ public class AIController : MonoBehaviour {
 		entity = GetComponent<Entity>();
 	}
 	
-	void Start() {
+	void SceneStart() {
 		if(!string.IsNullOrEmpty(startState)) {
 			SequenceSetState(startState);
 		}

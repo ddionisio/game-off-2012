@@ -48,7 +48,7 @@ public class EntitySpawner : MonoBehaviour {
 		}
 	}
 	
-	void Start() {
+	void SceneStart() {
 		if(activeOnStart) {
 			Activate(true);
 		}

@@ -32,6 +32,8 @@ public class Entity : MonoBehaviour {
 		void OnEntitySpawnFinish();
 	}
 	
+	public Action sceneStartAction = Action.NumActions; //only use this if placing entities on level manually, otherwise just put it in numactions
+	
 	public float spawnDelay = 1.0f;
 	
 	protected Reticle.Type mReticle = Reticle.Type.NumType;
@@ -140,9 +142,15 @@ public class Entity : MonoBehaviour {
 	/// Spawn this entity, resets stats, set action to spawning, then later calls OnEntitySpawnFinish.
 	/// NOTE: calls after an update to ensure Awake and Start is called.
 	/// </summary>
-	public void Spawn() {
+	public virtual void Spawn() {
+		mCurAct = mPrevAct = Action.NumActions; //avoid invalid updates
 		//ensure start is called before spawning if we are freshly allocated from entity manager
 		StartCoroutine(DoSpawn());
+	}
+	
+	public virtual void Release() {
+		StopAllCoroutines();
+		EntityManager.instance.Release(transform);
 	}
 	
 	//////////internal methods
@@ -170,8 +178,8 @@ public class Entity : MonoBehaviour {
 	protected virtual void OnEnable() {
 	}
 	
-	protected virtual void Start() {
-		action = Action.idle;
+	protected virtual void SceneStart() {
+		action = sceneStartAction;
 	}
 	
 	protected virtual void Update() {
