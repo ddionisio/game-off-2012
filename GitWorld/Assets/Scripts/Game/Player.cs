@@ -145,4 +145,9 @@ public class Player : Entity, Entity.IListener {
 	public void OnEntitySpawnFinish() {
 		//players don't really spawn...unless we implement lives, or restart, or whatever
 	}
+	
+	void OnSceneActivate(bool activate) {
+		mController.enabled = activate;
+		planetAttach.applyGravity = activate;
+	}
 }

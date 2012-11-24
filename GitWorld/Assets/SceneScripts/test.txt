@@ -8,6 +8,18 @@
 			"type":"jumper",
 			"name":"spunky",
 			"waypoint":"spawn_1"
+		},
+		{ "$type":"SceneActionAnnounce",
+			"delay":"2"
+			"colorR":"255",
+			"colorG":"255",
+			"colorB":"0"
+			"state":"FadeIn",
+			"message":"Be Excellent to each other."
+		},
+		{ "$type":"SceneActionAnnounce",
+			"delay":"10",
+			"state":"FadeOut"
 		}
 	]
 }

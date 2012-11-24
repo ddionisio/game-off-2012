@@ -7,6 +7,8 @@ public class CameraController : MonoBehaviour {
 		Attach
 	}
 	
+	public float moveDelay = 0.0f;
+	
 	private Mode mCurMode = Mode.Free;
 	
 	private Transform mAttach;
@@ -14,6 +16,10 @@ public class CameraController : MonoBehaviour {
 	private Transform mOrigin;
 	
 	private float mOriginMinDistance;
+	
+	private Vector3 prevPos;
+	private Quaternion prevRot;
+	private float mCurTime;
 	
 	//prev pos, prev up
 	//curTime
@@ -37,6 +43,7 @@ public class CameraController : MonoBehaviour {
 		}
 		set {
 			mAttach = value;
+			SetPrev();
 		}
 	}
 	
@@ -56,6 +63,10 @@ public class CameraController : MonoBehaviour {
 			
 			//TODO: set interpolation
 		}
+	}
+	
+	public void CancelMove() {
+		mCurTime = moveDelay;
 	}
 	
 	public void Reset() {
@@ -97,30 +108,70 @@ public class CameraController : MonoBehaviour {
 				Vector3 attachPos = mAttach.position;
 				
 				Transform camTrans = transform;
-				Vector3 camPos = camTrans.position;
+				Vector3 camPos = camTrans.localPosition;
 				
-				camTrans.rotation = mAttach.rotation;
-				
-				Vector3 newPos = new Vector3(attachPos.x, attachPos.y, camPos.z);//new Vector3(attachPos.x + tX, attachPos.y + tY, camPos.z);
-				
-				//limit the position's distance to origin
-				if(mOrigin != null) {
-					Vector3 origPos = mOrigin.position;
-					Vector3 dirToCam = newPos - origPos;
-					float dirToCamDist = dirToCam.magnitude;
-					if(dirToCamDist < mOriginMinDistance) {
-						dirToCam /= dirToCamDist;
-						newPos = origPos + dirToCam*mOriginMinDistance;
-						newPos.z = camPos.z;
+				if(mCurTime < moveDelay) {
+					float t;
+					
+					mCurTime += Time.deltaTime;
+					if(mCurTime >= moveDelay) {
+						t = 1.0f;
 					}
+					else {
+						t = Ease.In(mCurTime, moveDelay, 0.0f, 1.0f);
+					}
+					
+					attachPos.z = camPos.z;
+					
+					Vector3 newPos = Vector3.Lerp(prevPos, attachPos, t);
+					
+					//limit the position's distance to origin
+					LimitFromOrigin(camPos, ref newPos);
+					
+					camTrans.localPosition = newPos;
+					camTrans.localRotation = Quaternion.Slerp(prevRot, mAttach.rotation, t);
 				}
-				
-				camTrans.position = newPos;
+				else if(attachPos.x != camPos.x || attachPos.y != camPos.y) {
+					camTrans.localRotation = mAttach.rotation;
+					
+					Vector3 newPos = new Vector3(attachPos.x, attachPos.y, camPos.z);//new Vector3(attachPos.x + tX, attachPos.y + tY, camPos.z);
+					
+					//limit the position's distance to origin
+					LimitFromOrigin(camPos, ref newPos);
+					
+					camTrans.localPosition = newPos;
+				}
 			}
 			break;
 				
 		case Mode.Free:
+			if(mOrigin != null) {
+				Transform camTrans = transform;
+				Vector3 camPos = camTrans.localPosition;
+				LimitFromOrigin(camPos, ref camPos);
+				camTrans.localPosition = camPos;
+			}
 			break;
 		}
+	}
+	
+	void LimitFromOrigin(Vector3 camPos, ref Vector3 newPos) {
+		//limit the position's distance to origin
+		if(mOrigin != null) {
+			Vector3 origPos = mOrigin.position;
+			Vector3 dirToCam = newPos - origPos;
+			float dirToCamDist = dirToCam.magnitude;
+			if(dirToCamDist < mOriginMinDistance) {
+				dirToCam /= dirToCamDist;
+				newPos = origPos + dirToCam*mOriginMinDistance;
+				newPos.z = camPos.z;
+			}
+		}
+	}
+	
+	void SetPrev() {
+		prevPos = transform.localPosition;
+		prevRot = transform.localRotation;
+		mCurTime = 0;
 	}
 }
