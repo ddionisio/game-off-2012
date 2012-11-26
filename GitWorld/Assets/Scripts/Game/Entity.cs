@@ -4,6 +4,7 @@ using System.Collections;
 public class Entity : MonoBehaviour {
 	public enum Action {
 		idle,
+		start, //used by scene for player
 		spawning, //once finish, calls OnEntitySpawnFinish to listeners
 		reviving,
 		revived,
@@ -15,6 +16,9 @@ public class Entity : MonoBehaviour {
 		grabbed,
 		stunned,
 		victory,
+		jump_fall,
+		fall,
+		mad, //cutscene purpose
 		
 		NumActions
 	}

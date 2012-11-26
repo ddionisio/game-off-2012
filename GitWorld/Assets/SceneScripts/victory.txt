@@ -9,8 +9,8 @@
 			"action":"victory"
 		},
 		{ "$type":"SceneActionAnnounce",
-			"delay":"1"
-			"colorR":"0","colorG":"255","colorB":"0"
+			"delay":"1",
+			"colorR":"0","colorG":"255","colorB":"0",
 			"state":"FadeIn",
 			"message":"Conflicts resolved!"
 		},
@@ -19,19 +19,19 @@
 			"state":"FadeScaleOut"
 		},
 		{ "$type":"SceneActionAnnounce",
-			"delay":"1"
-			"colorR":"255","colorG":"255","colorB":"255"
+			"delay":"1",
+			"colorR":"255","colorG":"255","colorB":"255",
 			"state":"Blink",
 			"message":"Committing changes..."
 		},
 		{ "$type":"SceneActionAnnounce",
-			"delay":"3"
-			"colorR":"255","colorG":"255","colorB":"255"
+			"delay":"3",
+			"colorR":"255","colorG":"255","colorB":"255",
 			"state":"Blink",
 			"message":"Pushing to master branch..."
 		},
 		{ "$type":"SceneActionAnnounce",
-			"state":"None"
+			"state":"None",
 		}
 		{ "$type":"SceneActionOpenModal",
 			"delay":"3",

@@ -31,7 +31,7 @@
 			"delay":"1"
 		},
 		{ "$type":"SequencerActionChangeState",
-			"delay":"5",
+			"delay":"3",
 			"state":"victory"
 		}
 	]

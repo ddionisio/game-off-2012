@@ -6,6 +6,10 @@ public class PlayerController : MonoBehaviour {
 	
 	private Player mPlayer;
 	
+	void OnDestroy() {
+		mPlayer = null;
+	}
+	
 	void Awake() {
 		mPlayer = GetComponent<Player>();
 	}
@@ -23,6 +27,8 @@ public class PlayerController : MonoBehaviour {
 		
 		if(planetAttach.jumpCounter < maxJump) {
 			if(Input.GetButtonDown("Jump")) {
+				mPlayer.action = Entity.Action.jump;
+				
 				planetAttach.Jump(mPlayer.jumpSpeed);
 				
 				if(xS != 0.0f) {
@@ -32,7 +38,16 @@ public class PlayerController : MonoBehaviour {
 		}
 		
 		if(planetAttach.jumpCounter == 0 && planetAttach.isGround) {
-			planetAttach.velocity.x = xS*mPlayer.moveSpeed;
+			if(xS == 0 && (mPlayer.action == Entity.Action.move || mPlayer.action == Entity.Action.move)) {
+				mPlayer.action = Entity.Action.idle;
+				
+				planetAttach.velocity.x = 0;
+			}
+			else {
+				mPlayer.action = Entity.Action.move;
+				
+				planetAttach.velocity.x = xS*mPlayer.moveSpeed;
+			}
 		}
 		
 		planetAttach.velocity.y = 0;

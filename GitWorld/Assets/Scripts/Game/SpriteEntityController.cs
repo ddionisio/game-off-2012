@@ -40,14 +40,18 @@ public class SpriteEntityController : MonoBehaviour, Entity.IListener {
 			}
 		}
 	}
-
-	public virtual void OnEntityAct(Entity.Action act) {
+	
+	protected void PlayAnim(Entity.Action act) {
 		if(mSpriteAnim != null) {
 			int id = mActionAnimIds[(int)act];
-			if(id != -1) {
+			if(id != -1 && mSpriteAnim.clipId != id) {
 				mSpriteAnim.Play(id);
 			}
 		}
+	}
+
+	public virtual void OnEntityAct(Entity.Action act) {
+		PlayAnim(act);
 	}
 	
 	public virtual void OnEntityInvulnerable(bool yes) {
