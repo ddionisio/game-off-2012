@@ -101,17 +101,25 @@ public class Player : Entity, Entity.IListener {
 			break;
 			
 		case Action.hurt:
-			mPlayerCurTime = 0.0f;
+			_SetActionDisablePlayer();
 			Invulnerable(hurtInvulDelay);
-			mController.enabled = false;
 			break;
 			
 		case Action.die:
-			mPlayerCurTime = 0.0f;
-			mController.enabled = false;
+			_SetActionDisablePlayer();
 			BroadcastMessage("OnPlayerDeath", null, SendMessageOptions.DontRequireReceiver);
 			break;
+			
+		case Action.victory:
+			_SetActionDisablePlayer();
+			break;
 		}
+	}
+	
+	void _SetActionDisablePlayer() {
+		mPlayerCurTime = 0.0f;
+		planetAttach.velocity = Vector2.zero;
+		mController.enabled = false;
 	}
 	
 	public void OnEntityInvulnerable(bool yes) {

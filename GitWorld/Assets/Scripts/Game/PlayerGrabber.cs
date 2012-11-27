@@ -16,6 +16,11 @@ public class PlayerGrabber : MonoBehaviour {
 	public Transform head;
 	public Transform headAttach; //attachment point
 	
+	public string headClipIdle;
+	public string headClipGrab;
+	public string headClipHold;
+	public string headClipThrow;
+	
 	public Transform neck;
 	
 	public float radius = 10.0f;
@@ -29,7 +34,7 @@ public class PlayerGrabber : MonoBehaviour {
 	public int mLayerMasksGrab;
 	
 	private Player mPlayer;
-	private tk2dSprite mHeadSprite;
+	private tk2dAnimatedSprite mHeadSprite;
 	private tk2dSprite mNeckSprite;
 		
 	//stuff
@@ -43,6 +48,11 @@ public class PlayerGrabber : MonoBehaviour {
 	private Vector3 mGrabDest;
 	
 	private bool mDisable = false;
+	
+	private int mHeadClipIdleId;
+	private int mHeadClipGrabId;
+	public int mHeadClipHoldId;
+	public int mHeadClipThrowId;
 	
 	public State state {
 		get {
@@ -87,7 +97,13 @@ public class PlayerGrabber : MonoBehaviour {
 	
 	void Awake() {
 		mPlayer = player.GetComponent<Player>();
-		mHeadSprite = head.GetComponent<tk2dSprite>();
+		
+		mHeadSprite = head.GetComponent<tk2dAnimatedSprite>();
+		mHeadClipIdleId = mHeadSprite.GetClipIdByName(headClipIdle);
+		mHeadClipGrabId = mHeadSprite.GetClipIdByName(headClipGrab);
+		mHeadClipHoldId = mHeadSprite.GetClipIdByName(headClipHold);
+		mHeadClipThrowId = mHeadSprite.GetClipIdByName(headClipThrow);
+		
 		mNeckSprite = neck.GetComponent<tk2dSprite>();
 	}
 		
@@ -96,6 +112,7 @@ public class PlayerGrabber : MonoBehaviour {
 		mLayerMasksGrab = Main.layerMaskEnemy | Main.layerMaskProjectile | Main.layerMaskItem;
 		
 		//Input.mousePosition
+		SwitchState(State.None);
 	}
 	
 	void OrientHead(Vector2 dir, bool lockAngle) {
@@ -154,6 +171,8 @@ public class PlayerGrabber : MonoBehaviour {
 	
 	void GrabThrow() {
 		if(Input.GetButtonDown("Fire1")) {
+			mHeadSprite.Play(mHeadClipThrowId);
+			
 			Transform t = DetachGrab();
 			
 			mPlayer.OnGrabThrow();
@@ -220,6 +239,10 @@ public class PlayerGrabber : MonoBehaviour {
 		mCurState = newState;
 		
 		switch(newState) {
+		case State.None:
+			mHeadSprite.Play(mHeadClipIdleId);
+			break;
+			
 		case State.Grabbing:
 			mGrabCurDelay = 0.0f;
 			
@@ -229,6 +252,8 @@ public class PlayerGrabber : MonoBehaviour {
 			if(mGrabTarget != null) {
 				mGrabTarget.SendMessage("OnGrabStart", this, SendMessageOptions.DontRequireReceiver);
 			}
+			
+			mHeadSprite.Play(mHeadClipGrabId);
 			break;
 			
 		case State.Grabbed:
@@ -290,10 +315,18 @@ public class PlayerGrabber : MonoBehaviour {
 					LookAtMouse();
 					
 					if(mGrabTarget == null) {
+						if(!(mHeadSprite.clipId == mHeadClipIdleId || mHeadSprite.clipId == mHeadClipThrowId)) {
+							mHeadSprite.Play(mHeadClipIdleId);
+						}
+						
 						RefreshReticles();
 						GrabFromMouse();
 					}
 					else {
+						if(mHeadSprite.clipId != mHeadClipHoldId) {
+							mHeadSprite.Play(mHeadClipHoldId);
+						}
+						
 						GrabThrow();
 					}
 				}

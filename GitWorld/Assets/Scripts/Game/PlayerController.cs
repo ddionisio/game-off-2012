@@ -38,10 +38,12 @@ public class PlayerController : MonoBehaviour {
 		}
 		
 		if(planetAttach.jumpCounter == 0 && planetAttach.isGround) {
-			if(xS == 0 && (mPlayer.action == Entity.Action.move || mPlayer.action == Entity.Action.move)) {
-				mPlayer.action = Entity.Action.idle;
-				
-				planetAttach.velocity.x = 0;
+			if(xS == 0) {
+				if(mPlayer.action == Entity.Action.move || mPlayer.action == Entity.Action.jump) {
+					mPlayer.action = Entity.Action.idle;
+					
+					planetAttach.velocity.x = 0;
+				}
 			}
 			else {
 				mPlayer.action = Entity.Action.move;

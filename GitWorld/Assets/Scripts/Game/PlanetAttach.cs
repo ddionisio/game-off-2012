@@ -50,7 +50,7 @@ public class PlanetAttach : PlanetAttachStatic {
 		
 		if(!mIsGround) {
 			mIsGround = true;
-			gameObject.SendMessage("OnPlanetLand", this, SendMessageOptions.DontRequireReceiver);
+			gameObject.BroadcastMessage("OnPlanetLand", this, SendMessageOptions.DontRequireReceiver);
 		}
 	}
 	

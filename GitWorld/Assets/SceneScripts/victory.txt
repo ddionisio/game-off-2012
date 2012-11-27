@@ -1,9 +1,5 @@
 { "$type":"Sequencer"
 	"actions": [
-		{ "$type":"SceneActionActivateEntity",
-			"entityPath":"entities/player",
-			"activate":false
-		},
 		{ "$type":"SceneActionEntityAction",
 			"entityPath":"entities/player",
 			"action":"victory"
