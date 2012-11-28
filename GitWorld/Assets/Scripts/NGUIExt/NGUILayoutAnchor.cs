@@ -80,12 +80,11 @@ public class NGUILayoutAnchor : MonoBehaviour {
 			mTrans.localScale = s;
 		}
 	}
-
-	// Use this for initialization
-	void Start () {
+	
+	void Awake() {
 		mTrans = transform;
 	}
-	
+		
 	// Update is called once per frame
 	void Update () {
 #if UNITY_EDITOR

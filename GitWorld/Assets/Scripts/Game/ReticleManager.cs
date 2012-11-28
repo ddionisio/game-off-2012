@@ -9,10 +9,10 @@ public class ReticleManager : MonoBehaviour {
 	public Transform template;
 	
 	private struct ReticleHolder {
-		public Entity targettedEntity;
+		public EntityBase targettedEntity;
 		public Reticle reticle;
 		
-		public ReticleHolder(Entity target, Reticle r) {
+		public ReticleHolder(EntityBase target, Reticle r) {
 			targettedEntity = target;
 			reticle = r;
 		}
@@ -40,7 +40,7 @@ public class ReticleManager : MonoBehaviour {
 	// or if there's no entity
 	public Reticle Activate(Transform attachTo, Reticle.Type typeOverride=Reticle.Type.NumType) {
 		Reticle ret = null;
-		Entity ent = attachTo.GetComponentInChildren<Entity>();
+		EntityBase ent = attachTo.GetComponentInChildren<EntityBase>();
 		
 		//verify reticle type
 		Reticle.Type reticleType = typeOverride;
@@ -102,13 +102,39 @@ public class ReticleManager : MonoBehaviour {
 		}
 	}
 	
+	//deactivate a reticle residing in a target
+	public void DeactivateFromTarget(Transform target) {
+		//look for it
+		Reticle r = target.GetComponentInChildren<Reticle>();
+		if(r != null) {
+			for(int i = 0; i < mActiveReticles.Count; i++) {
+				ReticleHolder rh = mActiveReticles[i];
+				EntityBase e = rh.targettedEntity;
+				
+				if(rh.reticle == r) {
+					//cache the reticle
+					r.transform.parent = transform;
+					r.gameObject.SetActiveRecursively(false);
+					
+					if(e != null) {
+						e.FlagsRemove(Entity.Flag.Targetted);
+						e.OnTargetted(false);
+					}
+					
+					mActiveReticles.RemoveAt(i);
+					break;
+				}
+			}
+		}
+	}
+	
 	public void DeactivateAll(Transform exclude = null) {
 		Reticle reticleExclude = null;
-		Entity reticleExcludeEnt = null;
+		EntityBase reticleExcludeEnt = null;
 		
 		foreach(ReticleHolder rh in mActiveReticles) {
 			Reticle r = rh.reticle;
-			Entity e = rh.targettedEntity;
+			EntityBase e = rh.targettedEntity;
 			
 			if(r.transform.parent != exclude) {
 				//cache the reticle

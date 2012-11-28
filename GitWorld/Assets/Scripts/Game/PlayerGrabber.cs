@@ -82,6 +82,8 @@ public class PlayerGrabber : MonoBehaviour {
 	/// The detached object, parentless. :(
 	/// </returns>
 	public Transform DetachGrab() {
+		SwitchState(State.None);
+		
 		Transform ret = mGrabTarget;
 		if(ret != null) {
 			ret.parent = null;
@@ -109,7 +111,8 @@ public class PlayerGrabber : MonoBehaviour {
 		
 	// Use this for initialization
 	void Start () {
-		mLayerMasksGrab = Main.layerMaskEnemy | Main.layerMaskProjectile | Main.layerMaskItem;
+		//detect planet to avoid grabbing into the ground
+		mLayerMasksGrab = Main.layerMaskEnemy | Main.layerMaskProjectile | Main.layerMaskItem | Main.layerMaskPlanet;
 		
 		//Input.mousePosition
 		SwitchState(State.None);
@@ -171,9 +174,9 @@ public class PlayerGrabber : MonoBehaviour {
 	
 	void GrabThrow() {
 		if(Input.GetButtonDown("Fire1")) {
-			mHeadSprite.Play(mHeadClipThrowId);
-			
 			Transform t = DetachGrab();
+			
+			mHeadSprite.Play(mHeadClipThrowId);
 			
 			mPlayer.OnGrabThrow();
 			t.SendMessage("OnGrabThrow", this, SendMessageOptions.DontRequireReceiver);

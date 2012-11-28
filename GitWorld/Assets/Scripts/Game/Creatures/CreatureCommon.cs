@@ -12,14 +12,17 @@ public class CreatureCommon : Entity, Entity.IListener {
 	
 	public bool applyGravity = true;
 	public bool isComplex = false; //for bosses or large enemies with collision other than sphere
+	public bool customLayer = false;
+	public bool pauseAIOnHurt = true;
 	
-	private AIController mAI;
+	protected AIController mAI;
 	
 	private string mLastAIState;
 	
 	private float mCurEnemyTime = 0;
 	
 	private Vector2 mPrevVelocity;
+	private Vector2 mPrevAccel;
 	
 	protected override void Awake() {
 		base.Awake();
@@ -72,7 +75,7 @@ public class CreatureCommon : Entity, Entity.IListener {
 		Release();
 	}
 	
-	public void OnEntityAct(Action act) {
+	public virtual void OnEntityAct(Action act) {
 		//Debug.Log("enemy: "+name+" acting: "+act);
 		
 		switch(act) {
@@ -87,9 +90,12 @@ public class CreatureCommon : Entity, Entity.IListener {
 			Invulnerable(hurtDelay);
 			
 			mPrevVelocity = planetAttach.velocity;
+			mPrevAccel = planetAttach.accel;
 			planetAttach.velocity = Vector2.zero;
+			planetAttach.accel = Vector2.zero;
 			
-			mAI.SequenceSetPause(true);
+			if(pauseAIOnHurt)
+				mAI.SequenceSetPause(true);
 			break;
 			
 		case Action.reviving:
@@ -117,9 +123,14 @@ public class CreatureCommon : Entity, Entity.IListener {
 			mLastAIState = mAI.curState;
 			mAI.SequenceStop();
 			planetAttach.velocity = Vector2.zero;
+			planetAttach.accel = Vector2.zero;
 			planetAttach.applyGravity = true;
-			mCollideLayerMask = 0;
-			gameObject.layer = Main.layerItem;
+						
+			if(!customLayer) {
+				gameObject.layer = Main.layerItem;
+				mCollideLayerMask = 0;
+			}
+			
 			mReticle = Reticle.Type.Eat;
 			
 			mCurEnemyTime = 0;
@@ -131,20 +142,39 @@ public class CreatureCommon : Entity, Entity.IListener {
 		}
 	}
 	
-	public void OnEntityInvulnerable(bool yes) {
-		if(isComplex) {
-			gameObject.layer = yes ? Main.layerEnemyNoPlayerProjectile : Main.layerEnemyComplex;
-		}
-		else {
-			mCollideLayerMask = yes ? 0 : Main.layerMaskPlayerProjectile;
+	public virtual void OnEntityInvulnerable(bool yes) {
+		if(!customLayer) {
+			if(isComplex) {
+				gameObject.layer = yes ? Main.layerEnemyNoPlayerProjectile : Main.layerEnemyComplex;
+			}
+			else {
+				mCollideLayerMask = yes ? 0 : Main.layerMaskPlayerProjectile;
+			}
 		}
 		
 		//after invul wears off and we are hurt, resume activity
 		if(!yes && action == Entity.Action.hurt) {
 			action = prevAction;
 			planetAttach.velocity = mPrevVelocity;
+			planetAttach.accel = mPrevAccel;
 			
-			mAI.SequenceSetPause(false);
+			if(pauseAIOnHurt) {
+				mAI.SequenceSetPause(false);
+			}
+		}
+	}
+	
+	public void DoHurt() {
+		if(stats.curHP == 0) {
+			if(stunDelay > 0) {
+				action = Entity.Action.stunned;
+			}
+			else {
+				action = Entity.Action.die;
+			}
+		}
+		else {
+			action = Entity.Action.hurt;
 		}
 	}
 	
@@ -171,7 +201,7 @@ public class CreatureCommon : Entity, Entity.IListener {
 		}
 	}
 	
-	public void OnEntitySpawnFinish() {
+	public virtual void OnEntitySpawnFinish() {
 		if(mAI != null && !string.IsNullOrEmpty(afterSpawnAIState)) {
 			mAI.SequenceSetState(afterSpawnAIState);
 		}
@@ -181,20 +211,21 @@ public class CreatureCommon : Entity, Entity.IListener {
 		return action != Entity.Action.hurt;
 	}
 	
-	void OnPlanetLand(PlanetAttach pa) {
-	}
-	
 	void ResetCommonData() {
-		mCollideLayerMask = isComplex ? 0 : Main.layerMaskPlayerProjectile;
-		gameObject.layer = isComplex ? Main.layerEnemyComplex : Main.layerEnemy;
+		if(!customLayer) {
+			mCollideLayerMask = isComplex ? 0 : Main.layerMaskPlayerProjectile;
+			gameObject.layer = isComplex ? Main.layerEnemyComplex : Main.layerEnemy;
+		}
+		
 		mReticle = Reticle.Type.NumType;
 		mCurEnemyTime = 0;
 		mPrevVelocity = Vector2.zero;
+		mPrevAccel = Vector2.zero;
 		mLastAIState = null;
 		planetAttach.applyGravity = applyGravity;
 	}
 	
-	void LateUpdate () {
+	protected virtual void LateUpdate () {
 		switch(action) {
 		case Action.stunned:
 			mCurEnemyTime += Time.deltaTime;

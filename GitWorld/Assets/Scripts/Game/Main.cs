@@ -11,6 +11,7 @@ public class Main : MonoBehaviour {
 	public static int layerItem;
 	public static int layerPlayerProjectile;
 	public static int layerEnemyNoPlayerProjectile;
+	public static int layerPlanet;
 	
 	public static int layerMaskPlayer;
 	public static int layerMaskEnemy;
@@ -19,6 +20,7 @@ public class Main : MonoBehaviour {
 	public static int layerMaskItem;
 	public static int layerMaskPlayerProjectile;
 	public static int layerMaskEnemyNoPlayerProjectile;
+	public static int layerMaskPlanet;
 	
 	public TextAsset stringAsset;
 	
@@ -69,6 +71,7 @@ public class Main : MonoBehaviour {
 		layerItem = LayerMask.NameToLayer("Item");
 		layerPlayerProjectile = LayerMask.NameToLayer("PlayerProjectile");
 		layerEnemyNoPlayerProjectile = LayerMask.NameToLayer("EnemyNoPlayerProjectile");
+		layerPlanet = LayerMask.NameToLayer("Planet");
 		
 		layerMaskPlayer = 1<<layerPlayer;
 		layerMaskEnemy = 1<<layerEnemy;
@@ -77,6 +80,7 @@ public class Main : MonoBehaviour {
 		layerMaskItem = 1<<layerItem;
 		layerMaskPlayerProjectile = 1<<layerPlayerProjectile;
 		layerMaskEnemyNoPlayerProjectile = 1<<layerEnemyNoPlayerProjectile;
+		layerMaskPlanet = 1<<layerPlanet;
 		
 		DontDestroyOnLoad(gameObject);
 		

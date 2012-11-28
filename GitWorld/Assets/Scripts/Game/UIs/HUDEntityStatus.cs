@@ -13,12 +13,22 @@ public class HUDEntityStatus : MonoBehaviour {
 	
 	public UILabel nameWidget;
 	public UISprite portraitWidget;
+	public UISprite hpFrame;
+	
+	public float hurtPanelFeedbackDelay;
+	public float hurtPanelBlinkDelay;
+	
+	public float lastHPBlinkDelay; //set to 0 to disable
 	
 	public bool isHPFlipped = false;
 	
 	private List<HUDHitPoint> mHPs = new List<HUDHitPoint>();
 	private EntityStats mStats;
 	private int mCurHP;
+	
+	private float mCurPanelFeedbackDelay=0;
+	private float mCurPanelBlinkDelay=0;
+	private float mCurHPBlinkDelay=0;
 	
 	public void SetStats(EntityStats stats) {
 		mStats = stats;
@@ -81,6 +91,8 @@ public class HUDEntityStatus : MonoBehaviour {
 			mCurHP = mStats.curHP;
 		}
 		
+		mCurPanelFeedbackDelay = hurtPanelFeedbackDelay;
+		
 		if(nameWidget != null) {
 			nameWidget.text = mStats.displayName;
 		}
@@ -117,14 +129,45 @@ public class HUDEntityStatus : MonoBehaviour {
 				for(int i = mCurHP-1; i >= mStats.curHP; i--) {
 					mHPs[i].SetOn(false);
 				}
+				
+				mCurPanelBlinkDelay = mCurPanelFeedbackDelay = 0;
 			}
 			else { //increase
+				mHPs[mCurHP-1].onSprite.color = Color.white; //in case we increase from 1 while it's blinked out
 				for(int i = mCurHP; i < mStats.curHP; i++) {
 					mHPs[i].SetOn(true);
 				}
 			}
 			
 			mCurHP = mStats.curHP;
+		}
+		
+		//hp panel feedback
+		if(mCurPanelFeedbackDelay < hurtPanelFeedbackDelay) {
+			mCurPanelFeedbackDelay += Time.deltaTime;
+			if(mCurPanelFeedbackDelay >= hurtPanelFeedbackDelay) {
+				hpFrame.color = Color.white;
+			}
+			else {
+				mCurPanelBlinkDelay += Time.deltaTime;
+				if(mCurPanelBlinkDelay >= hurtPanelBlinkDelay) {
+					Color c = hpFrame.color;
+					c.a = c.a == 1.0f ? 0.0f : 1.0f;
+					hpFrame.color = c;
+					mCurPanelBlinkDelay = 0;
+				}
+			}
+		}
+		
+		//last hp feedback
+		if(mCurHP == 1 && lastHPBlinkDelay > 0) {
+			mCurHPBlinkDelay += Time.deltaTime;
+			if(mCurHPBlinkDelay >= lastHPBlinkDelay) {
+				Color c = mHPs[mCurHP-1].onSprite.color;
+				c.a = c.a == 1.0f ? 0.0f : 1.0f;
+				mHPs[mCurHP-1].onSprite.color = c;
+				mCurHPBlinkDelay = 0;
+			}
 		}
 	}
 	

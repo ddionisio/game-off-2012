@@ -8,7 +8,7 @@
 			"attachToPath":"entities/player"
 		},
 		{ "$type":"SceneActionAnnounce",
-			"delay":"2"
+			"delay":"1"
 			"colorR":"255",
 			"colorG":"255",
 			"colorB":"0"
@@ -16,12 +16,12 @@
 			"message":"Be Excellent to each other."
 		},
 		{ "$type":"SceneActionAnnounce",
-			"delay":"4",
+			"delay":"1",
 			"state":"FadeScaleOut"
 		},
 		{ "$type":"SceneActionSpawnEntity",
-			"type":"jumper",
-			"name":"spunky",
+			"type":"boss_1",
+			"name":"boss",
 			"waypoint":"spawn_1"
 		},
 		{ "$type":"SceneActionSetWave",

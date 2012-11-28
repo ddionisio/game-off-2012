@@ -12,7 +12,13 @@ public class AIController : MonoBehaviour {
 	public Vector2 curPlanetDir;
 	
 	[System.NonSerialized]
+	public Vector2 velocityHolder;
+	
+	[System.NonSerialized]
 	public float lastTime; //use this for waiting
+	
+	[System.NonSerialized]
+	public int counter; //some sort of counting
 	
 	public string startState;
 	
@@ -51,10 +57,16 @@ public class AIController : MonoBehaviour {
 		mStateInstance = AIManager.instance.states.Start(this, state);
 	}
 	
+	public void SequenceRestart() {
+		if(!string.IsNullOrEmpty(mCurState)) {
+			SequenceSetState(mCurState);
+		}
+	}
+	
 	void SequenceChangeState(string state) {
 		SequenceSetState(state);
 	}
-		
+				
 	void OnEnable() {
 		if(mHasStarted) { //during spawn
 			SceneStart();

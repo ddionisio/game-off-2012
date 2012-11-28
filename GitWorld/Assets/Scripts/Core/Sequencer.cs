@@ -75,6 +75,7 @@ public class Sequencer {
 					i++;
 					if(loop && i == len) {
 						i = 0;
+						yield return new WaitForFixedUpdate();
 					}
 				}
 				else {

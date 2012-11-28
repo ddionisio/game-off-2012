@@ -3,13 +3,13 @@ using System.Collections;
 
 public class AIJump : SequencerAction {
 
-	public float speedMin;
-	public float speedMax;
+	public float speedMin=0;
+	public float speedMax=0;
 	
 	public override void Start(MonoBehaviour behaviour) {
 		AIController ai = (AIController)behaviour;
 		PlanetAttach pa = ai.planetAttach;
-		pa.Jump(Random.Range(speedMin, speedMax));
+		pa.Jump(speedMin < speedMax ? Random.Range(speedMin, speedMax) : speedMin);
 		ai.entity.action = Entity.Action.jump;
 	}
 	

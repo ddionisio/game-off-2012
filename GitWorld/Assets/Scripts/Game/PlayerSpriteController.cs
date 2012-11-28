@@ -44,6 +44,7 @@ public class PlayerSpriteController : SpriteEntityController {
 		case Entity.Action.hurt:
 			break;
 		default:
+			Debug.Log("anim: "+player.action);
 			PlayAnim(player.action);
 			break;
 		}

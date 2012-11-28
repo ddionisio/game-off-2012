@@ -42,7 +42,7 @@ public class Player : Entity, Entity.IListener {
 	
 	void SetDefaultCollideMask() {
 		mCollideLayerMask = Main.layerMaskEnemy | Main.layerMaskEnemyComplex 
-			| Main.layerEnemyNoPlayerProjectile | Main.layerMaskProjectile;
+			| Main.layerMaskEnemyNoPlayerProjectile | Main.layerMaskProjectile;
 	}
 				
 	public void OnGrabStart() {
@@ -79,7 +79,6 @@ public class Player : Entity, Entity.IListener {
 			mPlayerCurTime += Time.deltaTime;
 			if(mPlayerCurTime >= deathDelay) {
 				Main.instance.uiManager.ModalOpen(UIManager.Modal.GameOver);
-				action = Entity.Action.NumActions;
 			}
 			break;
 		}

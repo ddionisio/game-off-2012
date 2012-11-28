@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Entity : MonoBehaviour {
+public class Entity : EntityBase {
 	public enum Action {
 		idle,
 		start, //used by scene for player
@@ -23,12 +23,7 @@ public class Entity : MonoBehaviour {
 		NumActions
 	}
 	
-	[System.Flags]
-	public enum Flag : int {
-		None = 0x0,
-		Targetted = 0x1,
-		Invulnerable = 0x2
-	}
+	
 	
 	public interface IListener {
 		void OnEntityAct(Action act);
@@ -40,12 +35,9 @@ public class Entity : MonoBehaviour {
 	public Action sceneStartAction = Action.NumActions; //only use this if placing entities on level manually, otherwise just put it in numactions
 	
 	public float spawnDelay = 1.0f;
-	
-	protected Reticle.Type mReticle = Reticle.Type.NumType;
+
 	protected int mCollideLayerMask = 0; //0 is none, only initialize on start
-	
-	private Flag mFlags = Flag.None;
-	
+			
 	private Action mCurAct = Action.NumActions;
 	private Action mPrevAct = Action.NumActions;
 	
@@ -56,13 +48,7 @@ public class Entity : MonoBehaviour {
 	
 	private float mInvulDelay = 0;
 	
-	private IListener[] mListeners;
-	
-	public Reticle.Type reticle {
-		get {
-			return mReticle;
-		}
-	}
+	private IListener[] mListeners;	
 	
 	public EntityStats stats {
 		get {
@@ -111,18 +97,6 @@ public class Entity : MonoBehaviour {
 		yield break;
 	}
 	
-	public void FlagsAdd(Flag flag) {
-		mFlags |= flag;
-	}
-	
-	public void FlagsRemove(Flag flag) {
-		mFlags ^= flag;
-	}
-	
-	public bool FlagsCheck(Flag flag) {
-		return (mFlags & flag) != Flag.None;
-	}
-	
 	public void InvulnerableOff() {
 		mEntCurTime = 0;
 		
@@ -167,11 +141,6 @@ public class Entity : MonoBehaviour {
 	
 			
 	/////////////implements
-	
-	//we are being targetted or cleared out of target
-	//called by reticle manager when reticle is set to us
-	public virtual void OnTargetted(bool yes) {
-	}
 	
 	protected virtual void Awake() {
 		mStats = GetComponent<EntityStats>();

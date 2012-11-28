@@ -19,10 +19,14 @@ public class EntityStats : MonoBehaviour {
 	
 	public void ApplyDamage(EntityStats src) {
 		if(src != null) {
-			mCurHP -= src.damage;
-			if(mCurHP < 0) {
-				mCurHP = 0;
-			}
+			ApplyDamage(src.damage);
+		}
+	}
+	
+	public void ApplyDamage(int amt) {
+		mCurHP -= amt;
+		if(mCurHP < 0) {
+			mCurHP = 0;
 		}
 	}
 	

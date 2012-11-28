@@ -6,13 +6,19 @@ public class PlanetAttach : PlanetAttachStatic {
 	public bool applyGravity = true;
 	public bool applyOrientation = true;
 	
+	public float maxVelocity;
+	
 	[System.NonSerialized]
 	public Vector2 velocity;
+	
+	[System.NonSerialized]
+	public Vector2 accel;
 	
 	private int mJumpCounter = 0;
 	private bool mIsGround = false;
 	
 	private float mYVel = 0;
+	private float mMaxVelocitySq;
 	
 	public int jumpCounter {
 		get {
@@ -61,6 +67,12 @@ public class PlanetAttach : PlanetAttachStatic {
 		mYVel = 0;
 	}
 	
+	protected override void Awake () {
+		base.Awake ();
+		
+		mMaxVelocitySq = maxVelocity*maxVelocity;
+	}
+	
 	void LateUpdate() {
 		float dt = Time.deltaTime;
 		
@@ -77,6 +89,20 @@ public class PlanetAttach : PlanetAttachStatic {
 		
 		if(!mIsGround && applyGravity) {
 			mYVel += planet.gravity*dt;
+		}
+		
+		if(accel != Vector2.zero) {
+			velocity += accel*Time.deltaTime;
+		}
+		
+		if(maxVelocity > 0) {
+			if(velocity.y == 0 && velocity.x > maxVelocity) {
+				velocity.x = maxVelocity;
+			}
+			else if(velocity.sqrMagnitude > mMaxVelocitySq) {
+				velocity.Normalize();
+				velocity *= maxVelocity;
+			}
 		}
 		
 		if(velocity != Vector2.zero || mYVel != 0) {

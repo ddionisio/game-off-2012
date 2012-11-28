@@ -74,20 +74,18 @@ public class PlanetAttachStatic : MonoBehaviour {
 	
 	public Util.Side CheckSide(PlanetAttachStatic against) {
 		float x=mPlanetPos.x, xAgainst = against.mPlanetPos.x;
-		float len1 = x - xAgainst;
-		float len2 = x - (planet.surfaceLength-xAgainst);
-		float d;
-		if(Mathf.Abs(len1) < Mathf.Abs(len2)) {
-			d = len1;
+		float d = x - xAgainst;
+		if(d > planet.surfaceLength*0.5f) {
+			d -= planet.surfaceLength;
 		}
-		else {
-			d = len2;
+		else if(d < -planet.surfaceLength*0.5f) {
+			d += planet.surfaceLength;
 		}
 		
 		return d == 0.0f ? Util.Side.None : d < 0.0f ? Util.Side.Right : Util.Side.Left;
 	}
 	
-	public Vector2 GetDirTo(PlanetAttachStatic target) {
+	public Vector2 GetDirTo(PlanetAttachStatic target, bool horizontalOnly=false) {
 		float x;
 		switch(CheckSide(target)) {
 		case Util.Side.Left:
@@ -101,7 +99,12 @@ public class PlanetAttachStatic : MonoBehaviour {
 			break;
 		}
 		
-		return (new Vector2(x, target.mPlanetPos.y - mPlanetPos.y)).normalized;
+		if(horizontalOnly) {
+			return new Vector2(x, 0);
+		}
+		else {
+			return (new Vector2(x, target.mPlanetPos.y - mPlanetPos.y)).normalized;
+		}
 	}
 	
 	protected virtual void OnAdjustToGround() {
