@@ -42,26 +42,6 @@ public struct PolarCoord {
 		return From(v.x, v.y);
 	}
 	
-	public static PolarCoord FromVelocity(float x, float y) {
-		float theta;
-		
-		if(x == 0 && y == 0) {
-			theta = 0;
-		}
-		else {
-			theta = Mathf.Atan2(y, x);
-			
-			if(theta < 0) {
-				theta += PI_2;
-			}
-		}
-		
-		float c = Mathf.Cos(theta);
-		float s = Mathf.Sin(theta);
-		
-		return new PolarCoord(c*x + s*y, theta);
-	}
-		
 	public PolarCoord(float dist, float angle) {
 		r = dist;
 		theta = angle;

@@ -14,12 +14,14 @@ public class PlanetAttachRotateVelocity : MonoBehaviour {
 	}
 	
 	void Update() {
-		float vel = planetAttach.velocity.y == 0 ? planetAttach.velocity.x : planetAttach.velocity.magnitude;
-		float rotate = mRotatePerMeterRad*vel*Time.deltaTime;
-		
-		Vector2 rotDir = Util.Vector2DRot(transform.up, rotate);
-		
-		Quaternion q = Quaternion.FromToRotation(transform.up, rotDir);
-		transform.rotation = q*transform.rotation;
+		if(planetAttach.velocity != Vector2.zero) {
+			float vel = planetAttach.velocity.y == 0 ? planetAttach.velocity.x : planetAttach.velocity.magnitude;
+			float rotate = mRotatePerMeterRad*vel*Time.deltaTime;
+			
+			Vector2 rotDir = Util.Vector2DRot(transform.up, rotate);
+			
+			Quaternion q = Quaternion.FromToRotation(transform.up, rotDir);
+			transform.rotation = q*transform.rotation;
+		}
 	}
 }

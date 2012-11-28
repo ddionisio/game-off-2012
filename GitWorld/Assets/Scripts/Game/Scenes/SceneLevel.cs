@@ -2,10 +2,8 @@ using UnityEngine;
 using System.Collections;
 
 public class SceneLevel : SceneController {
-	[System.NonSerialized]
-	public int enemyCount;
-	
-	
+	[SerializeField] Transform enemiesHolder;
+		
 	/// <summary>
 	/// Only use this for components that are in-game related. Only available after awake/level loaded.
 	/// </summary>
@@ -24,6 +22,12 @@ public class SceneLevel : SceneController {
 	public Player player {
 		get {
 			return mPlayer;
+		}
+	}
+	
+	public int enemyCount {
+		get {
+			return enemiesHolder.childCount;
 		}
 	}
 			

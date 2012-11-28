@@ -18,6 +18,8 @@ public class Player : Entity, Entity.IListener {
 	
 	public float deathDelay = 2.0f; //delay to bring game over menu up
 	
+	public Transform head;
+	
 	private PlayerController mController;
 	
 	private float mPlayerCurTime;
@@ -94,7 +96,15 @@ public class Player : Entity, Entity.IListener {
 	}
 	
 	public void OnEntityAct(Action act) {
+		if(prevAction == Entity.Action.start) {
+			head.gameObject.SetActiveRecursively(true);
+		}
+		
 		switch(act) {
+		case Action.start:
+			head.gameObject.SetActiveRecursively(false);
+			break;
+			
 		case Action.idle:
 			planetAttach.velocity = Vector2.zero;
 			break;

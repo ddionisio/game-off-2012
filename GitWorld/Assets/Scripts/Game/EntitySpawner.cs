@@ -23,6 +23,8 @@ public class EntitySpawner : MonoBehaviour {
 	
 	public int countPeriod = -1; //-1 for infinite
 	
+	public bool useSpawnFX = false;
+	
 	public bool activeOnStart;
 	
 	enum State {
@@ -89,7 +91,7 @@ public class EntitySpawner : MonoBehaviour {
 		case State.Inactive:
 			break;
 		case State.Spawn:
-			Transform t = EntityManager.instance.Spawn(type, null, null, null);
+			Transform t = EntityManager.instance.Spawn(type, null, null, null, useSpawnFX);
 			
 			//set position
 			Vector3 spawnPos = t.position;

@@ -60,4 +60,11 @@ public class WaypointManager : MonoBehaviour {
 			mWaypoints.Add(child.name, points);
 		}
 	}
+	
+	void OnDrawGizmos() {
+		foreach(Transform t in transform) {
+			Gizmos.color = Color.white;
+			Gizmos.DrawIcon(t.position, "waypoint", true);
+		}
+	}
 }

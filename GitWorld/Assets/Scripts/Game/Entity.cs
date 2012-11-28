@@ -125,13 +125,13 @@ public class Entity : EntityBase {
 	/// Spawn this entity, resets stats, set action to spawning, then later calls OnEntitySpawnFinish.
 	/// NOTE: calls after an update to ensure Awake and Start is called.
 	/// </summary>
-	public virtual void Spawn() {
+	public void Spawn() {
 		mCurAct = mPrevAct = Action.NumActions; //avoid invalid updates
 		//ensure start is called before spawning if we are freshly allocated from entity manager
 		StartCoroutine(DoSpawn());
 	}
 	
-	public virtual void Release() {
+	public void Release() {
 		StopAllCoroutines();
 		EntityManager.instance.Release(transform);
 	}

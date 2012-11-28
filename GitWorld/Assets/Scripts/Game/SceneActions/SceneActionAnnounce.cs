@@ -13,13 +13,13 @@ public class SceneActionAnnounce : SequencerAction {
 	public override void Start(MonoBehaviour behaviour) {
 		HUDAnnounce ha = Main.instance.uiManager.hud.announce;
 		
+		ha.state = state;
+		
 		if(state != HUDAnnounce.State.None) {
 			if((state != HUDAnnounce.State.FadeOut && state != HUDAnnounce.State.FadeScaleOut) || message.Length > 0) {
 				ha.color = new Color(((float)colorR)/255.0f, ((float)colorG)/255.0f, ((float)colorB)/255.0f);
 				ha.message = message;
 			}
 		}
-		
-		ha.state = state;
 	}
 }

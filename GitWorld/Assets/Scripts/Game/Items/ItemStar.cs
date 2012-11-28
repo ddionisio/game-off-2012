@@ -10,12 +10,20 @@ public class ItemStar : Entity, Entity.IListener {
 		Thrown,
 		Dying
 	}
+			
+	public tk2dAnimatedSprite starSprite;
+	public tk2dBaseSprite glowSprite;
 	
-	public Color deathColor;
+	public string starIdleClip;
+	
+	public float glowPulsePerSecond;
+	public int glowPulseMinAlpha;
+	
+	public float disappearBlinkDelay;
+	
 	public float grabScale;
 	
 	public float throwSpeed;
-	public float throwRotateSpeed;
 	
 	public int numBounce;
 	
@@ -23,16 +31,34 @@ public class ItemStar : Entity, Entity.IListener {
 	public float fadeOffDelay; //when do we start disappearing?
 	public float dyingDelay; //duration of disappear
 	
-	private tk2dBaseSprite mSprite;
+	public bool resetMovementOnSpawn = true;
+	
+	private bool mFadeEnabled = false;
+	
 	private int mCurBounce = 0;
+	
 	private float mCurFadeTime = 0;
+	private float mCurBlinkTime = 0;
+	private float mCurPulseTime = 0;
+	
+	private float mGlowPulseMinAlpha;
 	
 	private LifeState mLifeState = LifeState.None;
-			
+	
+	public bool fadeEnabled {
+		get {
+			return mFadeEnabled;
+		}
+		set {
+			mFadeEnabled = value;
+			mCurFadeTime = 0;
+		}
+	}
+	
 	protected override void Awake() {
 		base.Awake();
 		
-		mSprite = GetComponent<tk2dBaseSprite>();
+		mGlowPulseMinAlpha = ((float)glowPulseMinAlpha)/255.0f;
 	}
 	
 	protected override void OnEnable() {
@@ -42,24 +68,63 @@ public class ItemStar : Entity, Entity.IListener {
 	protected override void SceneStart() {
 		base.SceneStart();
 	}
+	
+	public void OnEntityAct(Action act) {
+		switch(act) {
+		case Action.spawning:
+			fadeEnabled = false;
 			
+			starSprite.scale = Vector3.one;
+			starSprite.color = Color.white;
+			starSprite.Play(starIdleClip);
+			
+			glowSprite.scale = Vector3.one;
+			glowSprite.color = Color.white;
+			
+			mCurBounce = 0;
+			
+			mLifeState = LifeState.None;
+			
+			planetAttach.applyOrientation = true;
+			planetAttach.applyGravity = false;
+			gameObject.layer = Main.layerItem;
+			mCollideLayerMask = 0;
+			mReticle = Reticle.Type.Grab;
+			
+			if(resetMovementOnSpawn) {
+				planetAttach.velocity = Vector2.zero;
+				planetAttach.accel = Vector2.zero;
+				planetAttach.ResetCurYVel();
+			}
+			
+			mCurPulseTime = 0;
+			break;
+		}
+	}
+	
+	public void OnEntitySpawnFinish() {
+		mLifeState = LifeState.Active;
+		action = Entity.Action.idle;
+	}
+	
 	void OnGrabStart(PlayerGrabber grabber) {
+		starSprite.color = Color.white;
+		
 		mLifeState = LifeState.Grabbed;
 		planetAttach.enabled = false;
-		mCurFadeTime = 0;
+		fadeEnabled = false;
 		mCurBounce = 0;
 		InvulnerableOff();
 	}
 	
 	void OnGrabDone(PlayerGrabber grabber) {
-		Vector3 scale = mSprite.scale;
-		scale.y = scale.x = grabScale;
-		mSprite.scale = scale;
+		Vector3 pos = transform.localPosition;
+		pos.z = 0.0f;
+		transform.localPosition = pos;
 		
-		mSprite.color = Color.white;
+		starSprite.scale = new Vector3(grabScale, grabScale, starSprite.scale.z);
 		
-		//particle?
-		
+		glowSprite.scale = new Vector3(grabScale, grabScale, glowSprite.scale.z);
 		
 		grabber.Retract(true);
 	}
@@ -73,6 +138,7 @@ public class ItemStar : Entity, Entity.IListener {
 	}
 	
 	void OnGrabDetach(PlayerGrabber grabber) {
+		//put back in the world
 		transform.parent = EntityManager.instance.transform;
 		
 		planetAttach.enabled = true;
@@ -81,13 +147,13 @@ public class ItemStar : Entity, Entity.IListener {
 	
 	void OnGrabThrow(PlayerGrabber grabber) {
 		mLifeState = LifeState.Thrown;
+		
+		fadeEnabled = true;
+		
 		mCurBounce = 0;
-		mCurFadeTime = 0;
 		
 		gameObject.layer = Main.layerPlayerProjectile;
 		mCollideLayerMask = Main.layerMaskEnemyComplex;
-		
-		planetAttach.applyOrientation = false;
 		
 		//compute velocity in planet space
 		Vector2 dir = planetAttach.ConvertToPlanetDir(grabber.head.up);
@@ -115,27 +181,12 @@ public class ItemStar : Entity, Entity.IListener {
 		}
 	}
 	
-	public void OnEntityAct(Action act) {
-		switch(act) {
-		case Action.spawning:
-			mLifeState = LifeState.None;
-			mCurFadeTime = 0.0f;
-			planetAttach.applyOrientation = true;
-			planetAttach.applyGravity = false;
-			gameObject.layer = Main.layerItem;
-			mCollideLayerMask = 0;
-			mReticle = Reticle.Type.Grab;
-			mSprite.color = Color.white;
-			mSprite.scale = Vector3.one;
-			break;
-		}
-	}
-	
 	public void OnEntityInvulnerable(bool yes) {
 	}
 	
 	public void OnEntityCollide(Entity other, bool youAreReceiver) {
 		//bouncing off enemy who received our 'star'tling blow! (har har!)
+		//TODO: properly bounce off from their collision, really should pass in the ray hit data
 		if((!youAreReceiver || mCollideLayerMask == Main.layerMaskEnemyComplex)
 			&& mCurBounce < numBounce && mLifeState == LifeState.Thrown) {
 			Vector2 vel = planetAttach.velocity;
@@ -146,33 +197,44 @@ public class ItemStar : Entity, Entity.IListener {
 			mCurBounce++;
 		}
 	}
-		
-	public void OnEntitySpawnFinish() {
-		//start fading out
-		mLifeState = LifeState.Active;
-		
-		action = Entity.Action.idle;
-	}
 	
 	void Decay(float delay) {
-		mCurFadeTime += Time.deltaTime;
-		if(mCurFadeTime >= delay || mCurBounce >= numBounce) {
-			mCurFadeTime = 0;
-			mSprite.color = deathColor;
-			mLifeState = LifeState.Dying;
+		if(mFadeEnabled) {
+			mCurFadeTime += Time.deltaTime;
+			if(mCurFadeTime >= delay || mCurBounce >= numBounce) {
+				mCurFadeTime = 0;
+				gameObject.layer = Main.layerIgnoreRaycast;
+				mReticle = Reticle.Type.NumType;
+				mLifeState = LifeState.Dying;
+			}
 		}
+	}
+	
+	void PulseGlow() {
+		mCurPulseTime += Time.deltaTime;
+		
+		float t = Mathf.Sin(Mathf.PI*mCurPulseTime*glowPulsePerSecond);
+		t *= t;
+		
+		Color c = glowSprite.color;
+		c.a = mGlowPulseMinAlpha + t*(1.0f - mGlowPulseMinAlpha);
+		glowSprite.color = c;
 	}
 	
 	void LateUpdate () {
 		switch(mLifeState) {
 		case LifeState.Active:
 			Decay(fadeOffDelay);
+			PulseGlow();
 			break;
 			
 		case LifeState.Thrown:
-			
-			
 			Decay(throwFadeOffDelay);
+			PulseGlow();
+			break;
+			
+		case LifeState.Grabbed:
+			PulseGlow();
 			break;
 			
 		case LifeState.Dying:
@@ -181,11 +243,18 @@ public class ItemStar : Entity, Entity.IListener {
 				mLifeState = LifeState.None;
 				EntityManager.instance.Release(transform);
 			}
+			
+			mCurBlinkTime += Time.deltaTime;
+			if(mCurBlinkTime >= disappearBlinkDelay) {
+				mCurBlinkTime = 0.0f;
+				
+				Color c = starSprite.color;
+				c.a = c.a == 1.0f ? 0.0f : 1.0f;
+				
+				starSprite.color = c;
+				glowSprite.color = c;
+			}
 			break;
-		}
-		
-		if(!planetAttach.applyOrientation) {
-			transform.up = Util.Vector2DRot(transform.up, throwRotateSpeed*Time.deltaTime*Mathf.Deg2Rad);
 		}
 	}
 }

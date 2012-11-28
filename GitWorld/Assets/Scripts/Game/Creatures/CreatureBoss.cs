@@ -2,12 +2,37 @@ using UnityEngine;
 using System.Collections;
 
 public class CreatureBoss : CreatureCommon {
-	public override void Spawn() {
-		base.Spawn();
+	[System.Serializable]
+	public class AIState {
+		public int hp;
+		public string state;
+	}
+	
+	public AIState[] bossAIStates;
+	
+	public override void OnEntityAct(Action act) {
+		base.OnEntityAct(act);
 		
-		Main.instance.uiManager.hud.bossStatus.gameObject.SetActiveRecursively(true);
-		Main.instance.uiManager.hud.bossStatus.SetStats(stats);
+		switch(act) {
+		case Action.spawning:
+			Main.instance.uiManager.hud.bossStatus.gameObject.SetActiveRecursively(true);
+			Main.instance.uiManager.hud.bossStatus.SetStats(stats);
+			break;
+		}
+	}
+	
+	public override string AIToStateAfterHurt() {
+		string ret = null;
 		
-		//TODO: more stuff here for special bosses, e.g. super big boss when we need to adjust the camera settings
+		if(stats != null) {
+			foreach(AIState aiState in bossAIStates) {
+				if(stats.curHP <= aiState.hp) {
+					ret = aiState.state;
+					break;
+				}
+			}
+		}
+		
+		return ret;
 	}
 }

@@ -49,6 +49,10 @@ public class HUDAnnounce : MonoBehaviour {
 				label.color = c;
 				break;
 			case State.Display:
+				label.enabled = true;
+				ResetData();
+				break;
+				
 			case State.Blink:
 			case State.FadeOut:
 			case State.FadeScaleOut:

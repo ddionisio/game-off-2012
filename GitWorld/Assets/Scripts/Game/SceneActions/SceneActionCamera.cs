@@ -28,5 +28,9 @@ public class SceneActionCamera : SequencerAction {
 				Debug.LogWarning("Can't find waypoint: "+attachToWaypoint);
 			}
 		}
+		
+		if(immediate) {
+			Main.instance.cameraController.CancelMove();
+		}
 	}
 }

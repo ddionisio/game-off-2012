@@ -23,6 +23,12 @@ public class PlanetBody : MonoBehaviour {
 		return new Vector2((polarPos.theta/PolarCoord.PI_2)*surfaceLength, polarPos.r - radius);
 	}
 	
+	public Vector2 ConvertToWorldPos(Vector2 planetPos) {
+		//convert to world space
+		PolarCoord polarPos = new PolarCoord(planetPos.y + radius, (planetPos.x/surfaceLength)*PolarCoord.PI_2);
+		return polarPos.ToVector2();
+	}
+	
 	void Awake() {
 		tag = planetTag;
 		mSurfaceLength = PolarCoord.PI_2*radius;

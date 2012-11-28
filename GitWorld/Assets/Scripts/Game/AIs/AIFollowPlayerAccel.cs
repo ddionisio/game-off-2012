@@ -28,16 +28,14 @@ public class AIFollowPlayerAccel : SequencerAction {
 		
 		bool done = true;
 		
-		if(doneAfterNumChangeDir == 0 || ai.counter < doneAfterNumChangeDir) {
-			//cap speed on opposite dir
-			if(Vector2.Dot(prevDir, ai.curPlanetDir) < 0.0f) {			
-				if(useBreakSpeed) {
-					pa.velocity = prevDir*breakSpeed;
-				}
-				
-				if(doneAfterNumChangeDir > 0) {
-					ai.counter++;
-				}
+		//cap speed on opposite dir
+		if(Vector2.Dot(prevDir, ai.curPlanetDir) < 0.0f) {			
+			if(useBreakSpeed) {
+				pa.velocity = prevDir*breakSpeed;
+			}
+			
+			if(doneAfterNumChangeDir > 0 && ai.counter < doneAfterNumChangeDir) {
+				ai.counter++;
 			}
 		}
 		

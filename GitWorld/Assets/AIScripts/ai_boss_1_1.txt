@@ -2,8 +2,8 @@
 	"loop":true,
 	"actions": [
 		{ "$type":"AIFollowPlayerAccel",
-			"breakSpeed":"200",
-			"accel":"120",
+			"breakSpeed":"150",
+			"accel":"90",
 			"doneAfterNumChangeDir":"2"
 		},
 		{ "$type":"AISetVelocity"

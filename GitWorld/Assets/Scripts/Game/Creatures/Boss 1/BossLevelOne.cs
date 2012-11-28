@@ -35,14 +35,7 @@ public class BossLevelOne : CreatureBoss {
 	private Vector3 mPrevBodyPos;
 	
 	private bool mFirstLand;
-	
-	public override void Spawn() {
-		base.Spawn();
 		
-		//setup stuff
-		Setup();
-	}
-	
 	//only used by eye
 	public void EyeEaten(Eye e) {
 		bool eaten = false;
@@ -241,6 +234,10 @@ public class BossLevelOne : CreatureBoss {
 		base.OnEntityAct(act);
 		
 		switch(act) {
+		case Action.spawning:
+			Setup();
+			break;
+			
 		case Action.hurt:
 			SetEyesVulnerable(false); //exposed later
 			break;

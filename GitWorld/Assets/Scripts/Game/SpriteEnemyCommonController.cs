@@ -18,16 +18,14 @@ public class SpriteEnemyCommonController : SpriteEntityController {
 	public override void OnEntityAct(Entity.Action act) {
 		base.OnEntityAct(act);
 		
-		Vector2 scale;
-		
 		switch(act) {
+		case Entity.Action.spawning:
 		case Entity.Action.idle:
-			scale = mSprite.scale;
-			scale.y = Mathf.Abs(scale.y);
-			mSprite.scale = scale;
+			ResetCommonData();
 			break;
 			
 		case Entity.Action.stunned:
+			Vector2 scale;
 			scale = mSprite.scale;
 			scale.y = -Mathf.Abs(scale.y);
 			mSprite.scale = scale;
@@ -45,5 +43,12 @@ public class SpriteEnemyCommonController : SpriteEntityController {
 	
 	public override void OnEntitySpawnFinish() {
 		base.OnEntitySpawnFinish();
+	}
+	
+	void ResetCommonData() {
+		Vector2 scale;
+		scale = mSprite.scale;
+		scale.y = Mathf.Abs(scale.y);
+		mSprite.scale = scale;
 	}
 }

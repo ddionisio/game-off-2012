@@ -40,20 +40,6 @@ public class CreatureCommon : Entity, Entity.IListener {
 		
 		base.SceneStart();
 	}
-	
-	public override void Spawn() {
-		ResetCommonData();
-		
-		base.Spawn();
-		
-		SceneLevel.instance.enemyCount++;
-	}
-	
-	public override void Release() {
-		base.Release();
-		
-		SceneLevel.instance.enemyCount--;
-	}
 			
 	//void OnGrabStart(PlayerGrabber grabber) {
 	//}
@@ -70,8 +56,11 @@ public class CreatureCommon : Entity, Entity.IListener {
 	}
 	
 	protected virtual void OnGrabRetractEnd(PlayerGrabber grabber) {
-		//get eaten, let player know
+		grabber.DetachGrab();
 		
+		planetAttach.enabled = true;
+		
+		//get eaten, let player know
 		Release();
 	}
 	
@@ -80,6 +69,7 @@ public class CreatureCommon : Entity, Entity.IListener {
 		
 		switch(act) {
 		case Action.spawning:
+			ResetCommonData();
 			break;
 			
 		case Action.idle:
@@ -142,6 +132,11 @@ public class CreatureCommon : Entity, Entity.IListener {
 		}
 	}
 	
+	//call this to change ai state after getting hit, return the state to change to
+	public virtual string AIToStateAfterHurt() {
+		return null;
+	}
+	
 	public virtual void OnEntityInvulnerable(bool yes) {
 		if(!customLayer) {
 			if(isComplex) {
@@ -158,7 +153,12 @@ public class CreatureCommon : Entity, Entity.IListener {
 			planetAttach.velocity = mPrevVelocity;
 			planetAttach.accel = mPrevAccel;
 			
-			if(pauseAIOnHurt) {
+			string aiChangeState = AIToStateAfterHurt();
+			
+			if(!string.IsNullOrEmpty(aiChangeState) && mAI.curState != aiChangeState) {
+				mAI.SequenceSetState(aiChangeState);
+			}
+			else if(pauseAIOnHurt) {
 				mAI.SequenceSetPause(false);
 			}
 		}

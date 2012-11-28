@@ -3,36 +3,164 @@
 		{ "$type":"SceneActionSetWave",
 			"current":"0", "max":"5"
 		},
+		{ "$type":"SceneActionEntityAction",
+			"entityPath":"entities/player",
+			"action":"start"
+		},
+		{ "$type":"SceneActionActivateEntity",
+			"entityPath":"entities/player",
+			"activate":false
+		},
 		{ "$type":"SceneActionCamera",
 			"mode":"Attach",
 			"attachToPath":"entities/player"
 		},
 		{ "$type":"SceneActionAnnounce",
-			"delay":"1"
-			"colorR":"255",
-			"colorG":"255",
-			"colorB":"0"
-			"state":"FadeIn",
-			"message":"Be Excellent to each other."
+			"delay":"1",
+			"state":"Blink",
+			"message":"CONFLICTS DETECTED"
+		},
+		{ "$type":"SceneActionAnnounce",
+			"delay":"2",
+			"state":"Display",
+			"message":"COMMENCING ASSAULT"
+		},
+		{ "$type":"SceneActionActivateEntity",
+			"entityPath":"entities/player",
+			"activate":true
+		},
+		{ "$type":"SceneActionAnnounce",
+			"delay":"2",
+			"state":"FadeScaleOut"
+		},
+		{ "$type":"SceneActionEntityAction",
+			"entityPath":"entities/player",
+			"action":"idle"
+		},
+		
+		
+		{ "$type":"SceneActionAnnounce",
+			"delay":"1",
+			"state":"Blink",
+			"message":"CONFLICT 1-5"
+		},
+		{ "$type":"SceneActionAnnounce",
+			"delay":"2",
+			"state":"Display",
+			"message":"GO"
 		},
 		{ "$type":"SceneActionAnnounce",
 			"delay":"1",
 			"state":"FadeScaleOut"
 		},
-		{ "$type":"SceneActionSpawnEntity",
-			"type":"boss_1",
-			"name":"boss",
-			"waypoint":"spawn_1"
-		},
 		{ "$type":"SceneActionSetWave",
 			"current":"1", "max":"5"
 		},
-		{ "$type":"SceneActionWaitEnemyCount",
-			"delay":"1"
+		
+		{ "$type":"SceneActionSpawnEntityNearPlayer",
+			"delay":"1",
+			"type":"jumper", "x":"120", "y":"30", "useFX":true
 		},
-		{ "$type":"SequencerActionChangeState",
-			"delay":"3",
-			"state":"victory"
+		{ "$type":"SceneActionSpawnEntityNearPlayer",
+			"delay":"2",
+			"type":"jumper", "x":"-120", "y":"30", "useFX":true
 		}
+		
+		{ "$type":"SceneActionWaitEnemyCount", "delay":"0.5"},
+		
+		{ "$type":"SceneActionAnnounce",
+			"delay":"1",
+			"state":"Blink",
+			"message":"CONFLICT 2-5"
+		},
+		{ "$type":"SceneActionAnnounce",
+			"delay":"2",
+			"state":"Display",
+			"message":"GO"
+		},
+		{ "$type":"SceneActionAnnounce",
+			"delay":"1",
+			"state":"FadeScaleOut"
+		},
+		{ "$type":"SceneActionSetWave",
+			"current":"2", "max":"5"
+		},
+		
+		{ "$type":"SceneActionSpawnEntityNearPlayer",
+			"delay":"1",
+			"type":"jumper", "x":"120", "y":"30", "useFX":true
+		},
+		
+		{ "$type":"SceneActionWaitEnemyCount", "delay":"0.5"},
+		
+		{ "$type":"SceneActionAnnounce",
+			"delay":"1",
+			"state":"Blink",
+			"message":"CONFLICT 3-5"
+		},
+		{ "$type":"SceneActionAnnounce",
+			"delay":"2",
+			"state":"Display",
+			"message":"GO"
+		},
+		{ "$type":"SceneActionAnnounce",
+			"delay":"1",
+			"state":"FadeScaleOut"
+		},
+		{ "$type":"SceneActionSetWave",
+			"current":"3", "max":"5"
+		},
+		
+		{ "$type":"SceneActionSpawnEntityNearPlayer",
+			"delay":"1",
+			"type":"jumper", "x":"120", "y":"30", "useFX":true
+		},
+		
+		{ "$type":"SceneActionWaitEnemyCount", "delay":"0.5"},
+		
+		{ "$type":"SceneActionAnnounce",
+			"delay":"1",
+			"state":"Blink",
+			"message":"CONFLICT 4-5"
+		},
+		{ "$type":"SceneActionAnnounce",
+			"delay":"2",
+			"state":"Display",
+			"message":"GO"
+		},
+		{ "$type":"SceneActionAnnounce",
+			"delay":"1",
+			"state":"FadeScaleOut"
+		},
+		{ "$type":"SceneActionSetWave",
+			"current":"4", "max":"5"
+		},
+		
+		{ "$type":"SceneActionSpawnEntityNearPlayer",
+			"delay":"1",
+			"type":"jumper", "x":"120", "y":"30", "useFX":true
+		},
+		
+		{ "$type":"SceneActionWaitEnemyCount", "delay":"0.5"},
+		
+		{ "$type":"SceneActionAnnounce",
+			"delay":"1",
+			"state":"Blink",
+			"message":"BOSS INCOMING"
+		},
+		{ "$type":"SceneActionAnnounce", "delay":"2" },
+		
+		{ "$type":"SceneActionSetWave",
+			"current":"5", "max":"5"
+		},
+		
+		{ "$type":"SceneActionSpawnEntityNearPlayer",
+			"delay":"1",
+			"type":"boss_1", "x":"0", "y":"200", "useFX":true
+		},
+		
+		{ "$type":"SceneActionWaitEnemyCount", "delay":"0.5"},
+		
+		{ "$type":"SequencerActionChangeState", "delay":"1", "state":"victory" }
 	]
 }

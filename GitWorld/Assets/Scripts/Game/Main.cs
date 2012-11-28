@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 public class Main : MonoBehaviour {
 	//only use these after awake
+	public static int layerIgnoreRaycast;
 	public static int layerPlayer;
 	public static int layerEnemy;
 	public static int layerEnemyComplex;
@@ -64,6 +65,7 @@ public class Main : MonoBehaviour {
 	void Awake() {
 		mInstance = this;
 		
+		layerIgnoreRaycast = LayerMask.NameToLayer("Ignore Raycast");
 		layerPlayer = LayerMask.NameToLayer("Player");
 		layerEnemy = LayerMask.NameToLayer("Enemy");
 		layerEnemyComplex = LayerMask.NameToLayer("EnemyComplex");

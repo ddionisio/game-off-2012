@@ -5,8 +5,9 @@ public class SceneActionSpawnEntity : SequencerAction {
 	public string type;
 	public string name;
 	public string waypoint;
+	public bool useFX=false;
 	
 	public override void Start(MonoBehaviour behaviour) {
-		EntityManager.instance.Spawn(type, name, null, waypoint);
+		EntityManager.instance.Spawn(type, name, null, waypoint, useFX);
 	}
 }
