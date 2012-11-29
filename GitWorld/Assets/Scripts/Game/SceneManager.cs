@@ -6,18 +6,25 @@ public class SceneManager : MonoBehaviour {
 	public enum Scene {
 		main,
 		start,
+		tutorial,
 		test
 	}
 	
 	public const string levelString = "level";
 	
 	private SceneController mSceneController;
-	private string mCurLevel;
+	private string mCurLevelStr;
+	private int mCurLevel;
 	private float mPrevTimeScale;
+	
+	public int curLevel {
+		get {
+			return mCurLevel;
+		}
+	}
 	
 	public SceneController sceneController {
 		get {
-			//TODO: automagically create a controller?
 			return mSceneController;
 		}
 	}
@@ -40,13 +47,14 @@ public class SceneManager : MonoBehaviour {
 	}
 	
 	public void LoadLevel(int level) {
-		mCurLevel = levelString+level;
-		LoadScene(mCurLevel);
+		mCurLevel = level;
+		mCurLevelStr = levelString+level;
+		LoadScene(mCurLevelStr);
 	}
 	
 	public void ReloadLevel() {
-		if(!string.IsNullOrEmpty(mCurLevel)) {
-			LoadScene(mCurLevel);
+		if(!string.IsNullOrEmpty(mCurLevelStr)) {
+			LoadScene(mCurLevelStr);
 		}
 	}
 	
@@ -71,9 +79,6 @@ public class SceneManager : MonoBehaviour {
 	public void InitScene() {
 		if(mSceneController == null) {
 			mSceneController = (SceneController)Object.FindObjectOfType(typeof(SceneController));
-			if(mSceneController != null) {
-				mSceneController.BroadcastMessage("SceneStart", null, SendMessageOptions.DontRequireReceiver);
-			}
 		}
 	}
 	

@@ -68,11 +68,7 @@ public class ItemStar : Entity, Entity.IListener {
 	protected override void OnEnable() {
 		base.OnEnable();
 	}
-	
-	protected override void SceneStart() {
-		base.SceneStart();
-	}
-	
+		
 	public void OnEntityAct(Action act) {
 		switch(act) {
 		case Action.spawning:

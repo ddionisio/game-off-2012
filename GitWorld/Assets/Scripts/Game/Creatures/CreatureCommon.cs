@@ -4,6 +4,8 @@ using System.Collections;
 public class CreatureCommon : Entity, Entity.IListener {
 	public string afterSpawnAIState; //set ai state to this after spawning
 	
+	public int score; //how much the player gets for killing this creature
+	
 	public float hurtDelay = 1.0f;
 	
 	public float stunDelay = 3; //set to zero for no stun, die right away. use for certain enemies
@@ -24,19 +26,14 @@ public class CreatureCommon : Entity, Entity.IListener {
 	
 	protected override void Awake() {
 		base.Awake();
+		
+		ResetCommonData();
 	}
 	
 	protected override void OnEnable() {
 		base.OnEnable();
 	}
 	
-	// Use this for initialization
-	protected override void SceneStart() {
-		ResetCommonData();
-		
-		base.SceneStart();
-	}
-			
 	//void OnGrabStart(PlayerGrabber grabber) {
 	//}
 	
@@ -57,6 +54,8 @@ public class CreatureCommon : Entity, Entity.IListener {
 		planetAttach.enabled = true;
 		
 		//get eaten, let player know
+		grabber.thePlayer.AddScore(score);
+		
 		Release();
 	}
 	

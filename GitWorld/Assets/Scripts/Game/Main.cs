@@ -30,7 +30,6 @@ public class Main : MonoBehaviour {
 	[System.NonSerialized] public UserData userData;
 	[System.NonSerialized] public SceneManager sceneManager;
 	[System.NonSerialized] public ReticleManager reticleManager;
-	[System.NonSerialized] public UIManager uiManager;
 	
 	private static Main mInstance = null;
 	
@@ -60,6 +59,9 @@ public class Main : MonoBehaviour {
 	
 	void OnApplicationQuit() {
 		mInstance = null;
+	}
+	
+	void OnEnable() {
 	}
 			
 	void Awake() {
@@ -93,7 +95,7 @@ public class Main : MonoBehaviour {
 		
 		sceneManager = GetComponentInChildren<SceneManager>();
 		reticleManager = GetComponentInChildren<ReticleManager>();
-		uiManager = GetComponentInChildren<UIManager>();
+		//uiManager = GetComponentInChildren<UIManager>();
 		
 		InitStrings();
 	}

@@ -19,7 +19,7 @@ public class SceneActionNewWave : SequencerAction {
 	public override void Start(MonoBehaviour behaviour, Sequencer.StateInstance state) {	
 		SceneLevel.instance.IncWave();
 		
-		HUDAnnounce announce = Main.instance.uiManager.hud.announce;
+		HUDAnnounce announce = UIManager.instance.hud.announce;
 		
 		announce.state = HUDAnnounce.State.Blink;
 		announce.message = isBossAnnounce ? bossString : SceneLevel.instance.GetWaveString();
@@ -29,7 +29,7 @@ public class SceneActionNewWave : SequencerAction {
 	}
 	
 	public override bool Update(MonoBehaviour behaviour, Sequencer.StateInstance state) {
-		HUDAnnounce announce = Main.instance.uiManager.hud.announce;
+		HUDAnnounce announce = UIManager.instance.hud.announce;
 		
 		bool isDone = false;
 		

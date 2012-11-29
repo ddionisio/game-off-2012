@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class Tentacle : EntityBase {
+	public int score;
 	
 	[System.NonSerialized]
 	public BossLevelOne boss = null;
@@ -25,6 +26,8 @@ public class Tentacle : EntityBase {
 	}
 	
 	void OnGrabRetractEnd(PlayerGrabber grabber) {
+		grabber.thePlayer.AddScore(score);
+		
 		//make something happen
 		grabber.DetachGrab();
 		boss.TentacleEaten(this);

@@ -24,7 +24,7 @@ public class SceneController : MonoBehaviour {
 		sequencer.Start(this, mStateInstance, state);
 	}
 	
-	void Start() {
+	protected virtual void Start() {
 		if(sequencer != null) {
 			//Sequencer.StateInstance
 			mStateInstance = new Sequencer.StateInstance();
@@ -32,7 +32,7 @@ public class SceneController : MonoBehaviour {
 		}
 	}
 	
-	void Awake() {
+	protected virtual void Awake() {
 		mRootPath = "/"+gameObject.name+"/";
 		
 		sequencer.Load();

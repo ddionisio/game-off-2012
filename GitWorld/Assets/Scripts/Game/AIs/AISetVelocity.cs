@@ -55,13 +55,11 @@ public class AISetVelocity : SequencerAction {
 			
 			aiState.curPlanetDir = pa.GetDirTo(player.planetAttach, followPlayerHorizontal);
 			
-			if(aiState.curPlanetDir != Vector2.zero) {
-				if(followPlayerHorizontal) {
-					pa.velocity = new Vector2(Mathf.Abs(pa.velocity.x)*aiState.curPlanetDir.x, pa.velocity.y);
-				}
-				else {
-					pa.velocity = aiState.curPlanetDir*pa.velocity.magnitude;
-				}
+			if(followPlayerHorizontal) {
+				pa.velocity = new Vector2(Mathf.Abs(pa.velocity.x)*aiState.curPlanetDir.x, pa.velocity.y);
+			}
+			else {
+				pa.velocity = aiState.curPlanetDir*pa.velocity.magnitude;
 			}
 			
 			done = false;

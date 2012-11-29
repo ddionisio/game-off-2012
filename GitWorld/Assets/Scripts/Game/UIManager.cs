@@ -27,7 +27,15 @@ public class UIManager : MonoBehaviour {
 	}
 	
 	public UIData[] uis;
+	
+	public static UIManager instance {
+		get {
+			return mInstance;
+		}
+	}
 			
+	private static UIManager mInstance;
+	
 	private Stack<UIData> mModalStack = new Stack<UIData>((int)Modal.NumModal);
 	private HUDInterface mHUD;
 	
@@ -150,7 +158,13 @@ public class UIManager : MonoBehaviour {
 		ModalCloseAll();
 	}
 	
+	void OnDestroy() {
+		mInstance = null;
+	}
+	
 	void Awake() {
+		mInstance = this;
+		
 		//setup data and deactivate object
 		for(int i = 0; i < uis.Length; i++) {
 			UIData uid = uis[i];

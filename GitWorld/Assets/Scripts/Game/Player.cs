@@ -24,22 +24,24 @@ public class Player : Entity, Entity.IListener {
 	
 	private float mPlayerCurTime;
 	
+	private PlayerStats mPlayerStats;
+	
 	///// implements
 	
 	protected override void Awake() {
 		base.Awake();
+		
+		SetDefaultCollideMask();
+		
+		if(stats != null) {
+			mPlayerStats = stats as PlayerStats;
+		}
 		
 		mController = GetComponent<PlayerController>();
 	}
 	
 	protected override void OnEnable() {
 		base.OnEnable();
-	}
-
-	protected override void SceneStart() {
-		SetDefaultCollideMask();
-		
-		base.SceneStart();
 	}
 	
 	void SetDefaultCollideMask() {
@@ -64,6 +66,16 @@ public class Player : Entity, Entity.IListener {
 	public void OnGrabThrow() {
 	}
 	
+	public void AddScore(int amt) {
+		if(mPlayerStats != null) {
+			mPlayerStats.AddScore(amt);
+		}
+	}
+	
+	public int GetScore() {
+		return mPlayerStats != null ? mPlayerStats.score : 0;
+	}
+	
 	///// internal
 	
 	// Update is called once per frame
@@ -80,7 +92,7 @@ public class Player : Entity, Entity.IListener {
 		case Action.die:
 			mPlayerCurTime += Time.deltaTime;
 			if(mPlayerCurTime >= deathDelay) {
-				Main.instance.uiManager.ModalOpen(UIManager.Modal.GameOver);
+				UIManager.instance.ModalOpen(UIManager.Modal.GameOver);
 			}
 			break;
 		}

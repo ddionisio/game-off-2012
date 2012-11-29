@@ -1,5 +1,7 @@
 { "$type":"Sequencer"
 	"actions": [
+		{ "$type":"SceneActionSaveLevelState" },
+		
 		{ "$type":"SceneActionEntityAction",
 			"entityPath":"entities/player",
 			"action":"victory"
@@ -11,7 +13,7 @@
 			"message":"Conflicts resolved!"
 		},
 		{ "$type":"SceneActionAnnounce",
-			"delay":"3",
+			"delay":"2",
 			"state":"FadeScaleOut"
 		},
 		{ "$type":"SceneActionAnnounce",
@@ -21,14 +23,14 @@
 			"message":"Committing changes..."
 		},
 		{ "$type":"SceneActionAnnounce",
-			"delay":"3",
+			"delay":"2",
 			"colorR":"255","colorG":"255","colorB":"255",
 			"state":"Blink",
 			"message":"Pushing to master branch..."
 		},
-		{ "$type":"SceneActionAnnounce",
-			"state":"None",
-		}
+		
+		{ "$type":"SceneActionAnnounce", "delay":"2", "state":"None"}
+		
 		{ "$type":"SceneActionOpenModal",
 			"delay":"3",
 			"modal":"Victory"

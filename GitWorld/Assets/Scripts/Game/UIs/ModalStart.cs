@@ -7,15 +7,17 @@ public class ModalStart : UIController {
 	
 	void Awake() {
 		buttonStart.onClick += OnButtonStart;
-		buttonHowTo.onClick += OnButtonHowTo;
+		
+		if(buttonHowTo != null)
+			buttonHowTo.onClick += OnButtonHowTo;
 	}
 	
 	void OnButtonStart(GameObject go) {
-		Main.instance.uiManager.ModalOpen(UIManager.Modal.LevelSelect);
+		UIManager.instance.ModalOpen(UIManager.Modal.LevelSelect);
 	}
 	
 	void OnButtonHowTo(GameObject go) {
-		Main.instance.uiManager.ModalOpen(UIManager.Modal.HowToPlay);
+		UIManager.instance.ModalOpen(UIManager.Modal.HowToPlay);
 	}
 	
 	// Use this for initialization

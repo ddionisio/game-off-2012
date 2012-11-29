@@ -1,9 +1,5 @@
 { "$type":"Sequencer"
 	"actions": [
-		{ "$type":"SceneActionEntityAction",
-			"entityPath":"entities/player",
-			"action":"start"
-		},
 		{ "$type":"SceneActionActivateEntity",
 			"entityPath":"entities/player",
 			"activate":false
@@ -39,8 +35,8 @@
 		
 		{ "$type":"SceneActionNewWave", "delay":"2"},
 				
-		{ "$type":"SceneActionSpawnEntityNearPlayer", "delay":"1", "type":"walker_jumper_1", "x":"150", "y":"0" },
-		{ "$type":"SceneActionSpawnEntityNearPlayer", "delay":"1", "type":"walker_jumper_1", "x":"-150", "y":"0" },
+		{ "$type":"SceneActionSpawnEntityNearPlayer", "delay":"1", "type":"walker_1", "x":"120", "y":"30" },
+		{ "$type":"SceneActionSpawnEntityNearPlayer", "delay":"2", "type":"walker_1", "x":"-120", "y":"30" },
 		
 		{ "$type":"SceneActionWaitEnemyCount", "delay":"0.5"},
 		

@@ -6,10 +6,10 @@ public class SceneActionOpenModal : SequencerAction {
 	public bool waitForClose = false;
 
 	public override void Start(MonoBehaviour behaviour, Sequencer.StateInstance state) {	
-		Main.instance.uiManager.ModalOpen(modal);
+		UIManager.instance.ModalOpen(modal);
 	}
 	
 	public override bool Update(MonoBehaviour behaviour, Sequencer.StateInstance state) {
-		return !(waitForClose && Main.instance.uiManager.ModalIsInStack(modal));
+		return !(waitForClose && UIManager.instance.ModalIsInStack(modal));
 	}
 }

@@ -2,11 +2,19 @@ using UnityEngine;
 using System.Collections;
 
 public class SceneMainMenu : SceneController {
+	public static UIManager.Modal pushOnStart = UIManager.Modal.NumModal;
 
 	// Use this for initialization
-	void SceneStart() {
-		Main.instance.uiManager.hud.gameObject.SetActiveRecursively(false);
-		Main.instance.uiManager.ModalOpen(UIManager.Modal.Start);
+	protected override void Start() {
+		base.Start();
+		
+		UIManager.instance.ModalOpen(UIManager.Modal.Start);
+		
+		//put on top of start
+		if(pushOnStart != UIManager.Modal.NumModal) {
+			UIManager.instance.ModalOpen(pushOnStart);
+			pushOnStart = UIManager.Modal.NumModal;
+		}
 	}
 	
 	// Update is called once per frame

@@ -8,6 +8,7 @@ public class HUDInterface : MonoBehaviour {
 	
 	public HUDWave wave;
 	public HUDScore score;
+	public HUDCombo combo;
 	
 	// Use this for initialization
 	void Start () {

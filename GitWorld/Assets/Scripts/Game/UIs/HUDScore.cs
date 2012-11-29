@@ -31,6 +31,7 @@ public class HUDScore : MonoBehaviour {
 	//animate numbers as it changes
 	void Update() {
 		if(mCurNumber != mNextNumber) {
+			
 			mCurDelay += Time.deltaTime;
 			if(mCurDelay >= delay) {
 				mCurNumber = mNextNumber;

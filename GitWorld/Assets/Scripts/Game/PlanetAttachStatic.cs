@@ -3,8 +3,15 @@ using System.Collections;
 
 public class PlanetAttachStatic : MonoBehaviour {
 	
-	[System.NonSerialized]
-	public PlanetBody planet = null;
+	public PlanetBody planet {
+		get {
+			if(mPlanet == null && SceneLevel.instance != null && SceneLevel.instance.planet != null)
+				mPlanet = SceneLevel.instance.planet.body;
+			return mPlanet;
+		}
+	}
+	
+	private PlanetBody mPlanet;
 	
 	public float radius;
 	
@@ -72,7 +79,7 @@ public class PlanetAttachStatic : MonoBehaviour {
 		}
 	}
 	
-	public Util.Side CheckSide(PlanetAttachStatic against) {
+	float _GetDelta(PlanetAttachStatic against) {
 		float x=mPlanetPos.x, xAgainst = against.mPlanetPos.x;
 		float d = x - xAgainst;
 		if(d > planet.surfaceLength*0.5f) {
@@ -82,7 +89,17 @@ public class PlanetAttachStatic : MonoBehaviour {
 			d += planet.surfaceLength;
 		}
 		
+		return d;
+	}
+	
+	public Util.Side CheckSide(PlanetAttachStatic against) {
+		float d = _GetDelta(against);
+		
 		return d == 0.0f ? Util.Side.None : d < 0.0f ? Util.Side.Right : Util.Side.Left;
+	}
+	
+	public float GetDistanceHorizontal(PlanetAttachStatic target) {
+		return Mathf.Abs(_GetDelta(target));
 	}
 	
 	public Vector2 GetDirTo(PlanetAttachStatic target, bool horizontalOnly=false) {
@@ -124,13 +141,6 @@ public class PlanetAttachStatic : MonoBehaviour {
 	}
 	
 	protected virtual void Start() {
-		if(planet == null && SceneLevel.instance != null && SceneLevel.instance.planet != null)
-			planet = SceneLevel.instance.planet.body;
-		
 		RefreshPos();
-	}
-	
-	void SceneStart() {
-		Start();
 	}
 }

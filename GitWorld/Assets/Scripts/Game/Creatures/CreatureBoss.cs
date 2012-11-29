@@ -15,8 +15,8 @@ public class CreatureBoss : CreatureCommon {
 		
 		switch(act) {
 		case Action.spawning:
-			Main.instance.uiManager.hud.bossStatus.gameObject.SetActiveRecursively(true);
-			Main.instance.uiManager.hud.bossStatus.SetStats(stats);
+			UIManager.instance.hud.bossStatus.gameObject.SetActiveRecursively(true);
+			UIManager.instance.hud.bossStatus.SetStats(stats);
 			break;
 		}
 	}

@@ -18,10 +18,10 @@ public class ModalConfirm : UIController {
 	private bool mRefresh = false;
 	
 	public static void Open(string aTitle, string aMessage, OnConfirm callback) {
-		Main.instance.uiManager.ModalOpen(UIManager.Modal.Confirm);
+		UIManager.instance.ModalOpen(UIManager.Modal.Confirm);
 		
 		//...
-		ModalConfirm us = (ModalConfirm)Main.instance.uiManager.uis[(int)UIManager.Modal.Confirm].ui;
+		ModalConfirm us = (ModalConfirm)UIManager.instance.uis[(int)UIManager.Modal.Confirm].ui;
 		
 		us.title.text = !string.IsNullOrEmpty(aTitle) ? aTitle : us.mDefaultTitle;
 		us.message.text = aMessage;
@@ -30,7 +30,7 @@ public class ModalConfirm : UIController {
 
 	void OnButtonYes(GameObject go) {
 		OnConfirm callme = mConfirmCallback;
-		Main.instance.uiManager.ModalCloseTop();
+		UIManager.instance.ModalCloseTop();
 		
 		if(callme != null) {
 			callme(true);
@@ -39,7 +39,7 @@ public class ModalConfirm : UIController {
 	
 	void OnButtonNo(GameObject go) {
 		OnConfirm callme = mConfirmCallback;
-		Main.instance.uiManager.ModalCloseTop();
+		UIManager.instance.ModalCloseTop();
 		
 		if(callme != null) {
 			callme(false);

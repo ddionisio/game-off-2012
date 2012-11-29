@@ -11,7 +11,7 @@ public class ModalPause : UIController {
 	void OnButtonResume(GameObject go) {
 		Main.instance.sceneManager.Resume();
 		
-		Main.instance.uiManager.ModalCloseAll();
+		UIManager.instance.ModalCloseAll();
 	}
 	
 	void OnButtonReturn(GameObject go) {

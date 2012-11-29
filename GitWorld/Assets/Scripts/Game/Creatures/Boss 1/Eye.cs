@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 
 public class Eye : EntityBase {
+	public int score;
+	
 	[System.NonSerialized]
 	public BossLevelOne boss = null;
 	
@@ -24,6 +26,8 @@ public class Eye : EntityBase {
 	}
 	
 	void OnGrabRetractEnd(PlayerGrabber grabber) {
+		grabber.thePlayer.AddScore(score);
+		
 		//make something happen
 		grabber.DetachGrab();
 		boss.EyeEaten(this);

@@ -11,6 +11,6 @@ public class SceneActionOpenDialog : SequencerAction {
 	}
 	
 	public override bool Update(MonoBehaviour behaviour, Sequencer.StateInstance state) {
-		return !Main.instance.uiManager.ModalIsInStack(UIManager.Modal.Dialog);
+		return !UIManager.instance.ModalIsInStack(UIManager.Modal.Dialog);
 	}
 }

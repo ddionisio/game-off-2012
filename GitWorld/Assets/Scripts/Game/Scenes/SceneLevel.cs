@@ -43,38 +43,40 @@ public class SceneLevel : SceneController {
 			mCurWave++;
 		}
 		
-		Main.instance.uiManager.hud.wave.SetWave(mCurWave,numWave);
+		UIManager.instance.hud.wave.SetWave(mCurWave,numWave);
 	}
 	
 	public string GetWaveString() {
 		return string.Format(WaveStringFormat, mCurWave, numWave);
 	}
 	
-	void SceneStart() {
+	protected override void Awake() {
 		mPlayer = GetComponentInChildren<Player>();
 		mPlanet = GetComponentInChildren<Planet>();
 		
-		Main.instance.uiManager.hud.gameObject.SetActiveRecursively(true);
+		base.Awake();
+	}
+	
+	protected override void Start() {
+		UIManager.instance.hud.gameObject.SetActiveRecursively(true);
 		
 		mCurWave = 0;
 		
-		Main.instance.uiManager.hud.wave.SetWave(0,numWave);
+		UIManager.instance.hud.combo.gameObject.SetActiveRecursively(false);
 		
-		Main.instance.uiManager.hud.score.score = 0;
+		UIManager.instance.hud.wave.SetWave(0,numWave);
 		
-		Main.instance.uiManager.hud.playerStatus.SetStats(mPlayer.stats);
-		Main.instance.uiManager.hud.bossStatus.gameObject.SetActiveRecursively(false); //...
+		UIManager.instance.hud.score.score = 0;
+		
+		UIManager.instance.hud.playerStatus.SetStats(mPlayer.stats);
+		UIManager.instance.hud.bossStatus.gameObject.SetActiveRecursively(false); //...
+		
+		base.Start();
 	}
 	
 	public void SceneShutdown() {
 		//
-		Main.instance.uiManager.hud.score.Clear();
-		Main.instance.uiManager.hud.wave.SetWave(0,0);
-		
-		Main.instance.uiManager.hud.playerStatus.SetStats(null);
-		Main.instance.uiManager.hud.bossStatus.SetStats(null);
-		
-		Main.instance.uiManager.hud.gameObject.SetActiveRecursively(false);
+		PlayerPrefs.Save();
 	}
 	
 	//calls from entity manager
@@ -86,7 +88,7 @@ public class SceneLevel : SceneController {
 	
 	void Update() {
 		if(Input.GetButtonDown("Menu")) {
-			UIManager uimgr = Main.instance.uiManager;
+			UIManager uimgr = UIManager.instance;
 			if(uimgr.ModalGetTop() == UIManager.Modal.GameOptions) {
 				Main.instance.sceneManager.Resume();
 				uimgr.ModalCloseTop();

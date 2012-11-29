@@ -12,12 +12,12 @@ public class ModalDialog : UIController {
 	private int mCurPage=0;
 	
 	public static void Open(string portraitRef, string name, string[] pages) {
-		if(Main.instance.uiManager.ModalGetTop() != UIManager.Modal.Dialog) {
-			Main.instance.uiManager.ModalOpen(UIManager.Modal.Dialog);
+		if(UIManager.instance.ModalGetTop() != UIManager.Modal.Dialog) {
+			UIManager.instance.ModalOpen(UIManager.Modal.Dialog);
 		}
 		
 		//...
-		ModalDialog us = (ModalDialog)Main.instance.uiManager.uis[(int)UIManager.Modal.Dialog].ui;
+		ModalDialog us = (ModalDialog)UIManager.instance.uis[(int)UIManager.Modal.Dialog].ui;
 		
 		us.mPages = pages;
 		us.mCurPage = 0;
@@ -36,7 +36,7 @@ public class ModalDialog : UIController {
 	void OnPageClick(GameObject go) {
 		mCurPage++;
 		if(mPages == null || mCurPage == mPages.Length) {
-			Main.instance.uiManager.ModalCloseTop();
+			UIManager.instance.ModalCloseTop();
 		}
 		else {
 			content.text = mPages[mCurPage];

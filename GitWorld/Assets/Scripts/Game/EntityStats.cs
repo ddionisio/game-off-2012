@@ -17,6 +17,12 @@ public class EntityStats : MonoBehaviour {
 		}
 	}
 	
+	public bool isFullHealth {
+		get {
+			return mCurHP == maxHP;
+		}
+	}
+	
 	public void ApplyDamage(EntityStats src) {
 		if(src != null) {
 			ApplyDamage(src.damage);
@@ -28,6 +34,9 @@ public class EntityStats : MonoBehaviour {
 		if(mCurHP < 0) {
 			mCurHP = 0;
 		}
+		else if(mCurHP > maxHP) {
+			mCurHP = maxHP;
+		}
 	}
 	
 	public virtual void ResetStats() {
@@ -36,15 +45,5 @@ public class EntityStats : MonoBehaviour {
 	
 	void Awake() {
 		ResetStats();
-	}
-
-	// Use this for initialization
-	void Start () {
-	
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
 	}
 }

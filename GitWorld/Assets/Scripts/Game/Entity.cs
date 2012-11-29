@@ -207,7 +207,7 @@ public class Entity : EntityBase {
 	protected virtual void OnEnable() {
 	}
 	
-	protected virtual void SceneStart() {
+	protected virtual void Start() {
 		action = sceneStartAction;
 	}
 	

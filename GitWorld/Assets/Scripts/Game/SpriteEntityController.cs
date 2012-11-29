@@ -20,12 +20,6 @@ public class SpriteEntityController : MonoBehaviour, Entity.IListener {
 	}
 	
 	protected virtual void Start() {
-		if(mSpriteAnim != null) {
-			mActionAnimIds = new int[(int)Entity.Action.NumActions];
-			for(int i = 0; i < mActionAnimIds.Length; i++) {
-				mActionAnimIds[i] = mSpriteAnim.GetClipIdByName(((Entity.Action)i).ToString());
-			}
-		}
 	}
 	
 	protected virtual void Update() {
@@ -43,6 +37,13 @@ public class SpriteEntityController : MonoBehaviour, Entity.IListener {
 	
 	protected void PlayAnim(Entity.Action act) {
 		if(mSpriteAnim != null) {
+			if(mActionAnimIds == null) {
+				mActionAnimIds = new int[(int)Entity.Action.NumActions];
+				for(int i = 0; i < mActionAnimIds.Length; i++) {
+					mActionAnimIds[i] = mSpriteAnim.GetClipIdByName(((Entity.Action)i).ToString());
+				}
+			}
+			
 			int id = mActionAnimIds[(int)act];
 			if(id != -1 && mSpriteAnim.clipId != id) {
 				mSpriteAnim.Play(id);
