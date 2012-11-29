@@ -7,7 +7,7 @@ public class SceneActionCamera : SequencerAction {
 	public string attachToWaypoint = ""; //waypoint name, not path!
 	public bool immediate=true;
 	
-	public override void Start(MonoBehaviour behaviour) {
+	public override void Start(MonoBehaviour behaviour, Sequencer.StateInstance state) {
 		Main.instance.cameraController.mode = mode;
 		
 		if(attachToPath.Length > 0) {

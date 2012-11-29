@@ -2,7 +2,9 @@ using UnityEngine;
 using System.Collections;
 
 public class SpriteEnemyCommonController : SpriteEntityController {
-
+	[SerializeField] CreatureCommon creature; //the creature this is attached to
+	[SerializeField] bool flipOnStun = false;
+	
 	protected override void Awake() {
 		base.Awake();
 	}
@@ -13,6 +15,13 @@ public class SpriteEnemyCommonController : SpriteEntityController {
 	
 	protected override void Update() {
 		base.Update();
+		
+		//set to fall state if applicable
+		if(creature != null && creature.planetAttach.applyGravity && creature.action != Entity.Action.hurt) {
+			if(creature.planetAttach.GetCurYVel() < 0) {
+				PlayAnim(Entity.Action.fall);	
+			}
+		}
 	}
 
 	public override void OnEntityAct(Entity.Action act) {
@@ -25,10 +34,12 @@ public class SpriteEnemyCommonController : SpriteEntityController {
 			break;
 			
 		case Entity.Action.stunned:
-			Vector2 scale;
-			scale = mSprite.scale;
-			scale.y = -Mathf.Abs(scale.y);
-			mSprite.scale = scale;
+			if(flipOnStun) {
+				Vector2 scale;
+				scale = mSprite.scale;
+				scale.y = -Mathf.Abs(scale.y);
+				mSprite.scale = scale;
+			}
 			break;
 		}
 	}
@@ -45,10 +56,26 @@ public class SpriteEnemyCommonController : SpriteEntityController {
 		base.OnEntitySpawnFinish();
 	}
 	
+	void OnPlanetLand(PlanetAttach pa) {
+		//perform proper animation
+		if(creature != null) {
+			switch(creature.action) {
+			case Entity.Action.hurt:
+				break;
+			default:
+				if(creature.action != Entity.Action.NumActions)
+					PlayAnim(creature.action);
+				break;
+			}
+		}
+	}
+	
 	void ResetCommonData() {
-		Vector2 scale;
-		scale = mSprite.scale;
-		scale.y = Mathf.Abs(scale.y);
-		mSprite.scale = scale;
+		if(flipOnStun) {
+			Vector2 scale;
+			scale = mSprite.scale;
+			scale.y = Mathf.Abs(scale.y);
+			mSprite.scale = scale;
+		}
 	}
 }

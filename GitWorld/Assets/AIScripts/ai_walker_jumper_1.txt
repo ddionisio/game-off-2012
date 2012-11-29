@@ -1,0 +1,21 @@
+{ "$type":"Sequencer",
+	"loop":true,
+	"actions": [
+		{ "$type":"AISetDirToPlayer" },
+		{ "$type":"AISetVelocity", "speedMin":"75", "speedMax":"90", "followPlayer":true, "followPlayerDuration":"2"},
+		
+		{ "$type":"AIJump", "speedMin":"200"},
+		
+		{ "$type":"AISetDirToPlayer" },
+		{ "$type":"AISetVelocity", "speedMin":"85", "speedMax":"100", "useDir":true},
+		{ "$type":"AIJump", "speedMin":"160"},
+		
+		{ "$type":"AISetDirToPlayer" },
+		{ "$type":"AISetVelocity", "speedMin":"85", "speedMax":"100", "useDir":true},
+		{ "$type":"AIJump", "speedMin":"140"},
+	
+		{ "$type":"AISetVelocity", "delay":"1" }
+
+		{ "$type":"SequencerAction", "delay":"0.15" }
+	]
+}

@@ -20,13 +20,15 @@ public class SceneController : MonoBehaviour {
 		if(mStateInstance != null) {
 			mStateInstance.terminate = true;
 		}
-		mStateInstance = sequencer.Start(this, state);
+		mStateInstance = new Sequencer.StateInstance();
+		sequencer.Start(this, mStateInstance, state);
 	}
 	
 	void Start() {
 		if(sequencer != null) {
 			//Sequencer.StateInstance
-			mStateInstance = sequencer.Start(this);
+			mStateInstance = new Sequencer.StateInstance();
+			sequencer.Start(this, mStateInstance, null);
 		}
 	}
 	

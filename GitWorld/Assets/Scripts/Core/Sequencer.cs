@@ -12,6 +12,12 @@ public class Sequencer {
 	public class StateInstance {
 		public bool pause=false;
 		public bool terminate=false;
+		public int counter=0;
+		public float startTime=0; //the time when start happened
+		
+		public bool IsDelayReached(float delay) {
+			return Time.time >= startTime + delay;
+		}
 	}
 	
 	public bool loop = false;
@@ -54,9 +60,10 @@ public class Sequencer {
 				}
 				
 				if(!stateInstance.terminate) {
-					action.Start(behaviour);
+					stateInstance.startTime = Time.time;
+					action.Start(behaviour, stateInstance);
 					
-					while(!stateInstance.terminate && !action.Update(behaviour)) {
+					while(!stateInstance.terminate && !action.Update(behaviour, stateInstance)) {
 						yield return new WaitForFixedUpdate();
 						
 						//ensure we wait until unpaused before updating again
@@ -70,7 +77,7 @@ public class Sequencer {
 						}
 					}
 					
-					action.Finish(behaviour);
+					action.Finish(behaviour, stateInstance);
 					
 					i++;
 					if(loop && i == len) {

@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class PlanetAttach : PlanetAttachStatic {
+	public const float maxYVelCap = 600.0f;
 	
 	public bool applyGravity = true;
 	public bool applyOrientation = true;
@@ -89,6 +90,10 @@ public class PlanetAttach : PlanetAttachStatic {
 		
 		if(!mIsGround && applyGravity) {
 			mYVel += planet.gravity*dt;
+			
+			if(mYVel > maxYVelCap) {
+				mYVel = maxYVelCap;
+			}
 		}
 		
 		if(accel != Vector2.zero) {

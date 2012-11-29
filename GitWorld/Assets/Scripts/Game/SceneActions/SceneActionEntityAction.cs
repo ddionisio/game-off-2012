@@ -5,7 +5,7 @@ public class SceneActionEntityAction : SequencerAction {
 	public string entityPath = "";
 	public Entity.Action action;
 	
-	public override void Start(MonoBehaviour behaviour) {
+	public override void Start(MonoBehaviour behaviour, Sequencer.StateInstance state) {
 		if(entityPath.Length > 0) {
 			GameObject go = ((SceneController)behaviour).SearchObject(entityPath);
 			if(go != null) {

@@ -15,8 +15,6 @@ public class CreatureCommon : Entity, Entity.IListener {
 	public bool customLayer = false;
 	public bool pauseAIOnHurt = true;
 	
-	protected AIController mAI;
-	
 	private string mLastAIState;
 	
 	private float mCurEnemyTime = 0;
@@ -26,8 +24,6 @@ public class CreatureCommon : Entity, Entity.IListener {
 	
 	protected override void Awake() {
 		base.Awake();
-		
-		mAI = GetComponent<AIController>();
 	}
 	
 	protected override void OnEnable() {
@@ -85,7 +81,7 @@ public class CreatureCommon : Entity, Entity.IListener {
 			planetAttach.accel = Vector2.zero;
 			
 			if(pauseAIOnHurt)
-				mAI.SequenceSetPause(true);
+				AISetPause(true);
 			break;
 			
 		case Action.reviving:
@@ -104,14 +100,14 @@ public class CreatureCommon : Entity, Entity.IListener {
 			action = Entity.Action.idle;
 			
 			if(!string.IsNullOrEmpty(playAIState)) {
-				mAI.SequenceSetState(playAIState);
+				AISetState(playAIState);
 			}
 			break;
 			
 		case Action.stunned:
 			//stop activity and become edible
-			mLastAIState = mAI.curState;
-			mAI.SequenceStop();
+			mLastAIState = aiCurState;
+			AIStop();
 			planetAttach.velocity = Vector2.zero;
 			planetAttach.accel = Vector2.zero;
 			planetAttach.applyGravity = true;
@@ -155,11 +151,11 @@ public class CreatureCommon : Entity, Entity.IListener {
 			
 			string aiChangeState = AIToStateAfterHurt();
 			
-			if(!string.IsNullOrEmpty(aiChangeState) && mAI.curState != aiChangeState) {
-				mAI.SequenceSetState(aiChangeState);
+			if(!string.IsNullOrEmpty(aiChangeState) && aiCurState != aiChangeState) {
+				AISetState(aiChangeState);
 			}
 			else if(pauseAIOnHurt) {
-				mAI.SequenceSetPause(false);
+				AISetPause(false);
 			}
 		}
 	}
@@ -202,8 +198,8 @@ public class CreatureCommon : Entity, Entity.IListener {
 	}
 	
 	public virtual void OnEntitySpawnFinish() {
-		if(mAI != null && !string.IsNullOrEmpty(afterSpawnAIState)) {
-			mAI.SequenceSetState(afterSpawnAIState);
+		if(!string.IsNullOrEmpty(afterSpawnAIState)) {
+			AISetState(afterSpawnAIState);
 		}
 	}
 	

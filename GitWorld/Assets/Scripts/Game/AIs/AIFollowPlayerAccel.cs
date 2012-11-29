@@ -11,40 +11,40 @@ public class AIFollowPlayerAccel : SequencerAction {
 	public float breakSpeed = 0; //cheap
 	public bool useBreakSpeed = true;
 			
-	public override void Start(MonoBehaviour behaviour) {
-		AIController ai = (AIController)behaviour;
-		ai.counter = 0;
+	public override void Start(MonoBehaviour behaviour, Sequencer.StateInstance state) {
+		((AIState)state).counter = 0;
 	}
 	
-	public override bool Update(MonoBehaviour behaviour) {
-		AIController ai = (AIController)behaviour;
+	public override bool Update(MonoBehaviour behaviour, Sequencer.StateInstance state) {
+		AIState aiState = (AIState)state;
+		Entity ai = (Entity)behaviour;
 		
 		PlanetAttach pa = ai.planetAttach;
 		Player player = SceneLevel.instance.player;
 		
 		//Debug.Log("side: "+pa.CheckSide(player.planetAttach));
-		Vector2 prevDir = ai.curPlanetDir;
-		ai.curPlanetDir = pa.GetDirTo(player.planetAttach, horizontalOnly);
+		Vector2 prevDir = aiState.curPlanetDir;
+		aiState.curPlanetDir = pa.GetDirTo(player.planetAttach, horizontalOnly);
 		
 		bool done = true;
 		
 		//cap speed on opposite dir
-		if(Vector2.Dot(prevDir, ai.curPlanetDir) < 0.0f) {			
+		if(Vector2.Dot(prevDir, aiState.curPlanetDir) < 0.0f) {			
 			if(useBreakSpeed) {
 				pa.velocity = prevDir*breakSpeed;
 			}
 			
-			if(doneAfterNumChangeDir > 0 && ai.counter < doneAfterNumChangeDir) {
-				ai.counter++;
+			if(doneAfterNumChangeDir > 0 && aiState.counter < doneAfterNumChangeDir) {
+				aiState.counter++;
 			}
 		}
 		
 		if(doneAfterNumChangeDir > 0) {
-			done = doneAfterNumChangeDir == ai.counter && Vector2.Dot(pa.velocity, ai.curPlanetDir) > 0.0f;
+			done = doneAfterNumChangeDir == aiState.counter && Vector2.Dot(pa.velocity, aiState.curPlanetDir) > 0.0f;
 		}
 		
 		//pa.velocity = Vector2.zero;
-		pa.accel = ai.curPlanetDir*accel;
+		pa.accel = aiState.curPlanetDir*accel;
 				
 		return done;
 	}

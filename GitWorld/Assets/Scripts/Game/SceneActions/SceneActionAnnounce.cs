@@ -10,7 +10,7 @@ public class SceneActionAnnounce : SequencerAction {
 	
 	public string message = "";
 	
-	public override void Start(MonoBehaviour behaviour) {
+	public override void Start(MonoBehaviour behaviour, Sequencer.StateInstance aiState) {
 		HUDAnnounce ha = Main.instance.uiManager.hud.announce;
 		
 		ha.state = state;

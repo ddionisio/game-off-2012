@@ -146,7 +146,7 @@ public class BossLevelOne : CreatureBoss {
 		mStatus = s;
 		switch(s) {
 		case Status.Active:
-			mAI.SequenceRestart();
+			AIRestart();
 			break;
 			
 		case Status.TentacleEaten:
@@ -179,7 +179,7 @@ public class BossLevelOne : CreatureBoss {
 	private void StopMotion() {
 		planetAttach.velocity = Vector2.zero;
 		planetAttach.accel = Vector2.zero;
-		mAI.SequenceSetPause(true);
+		AISetPause(true);
 	}
 	
 	private void RegenTentacles() {

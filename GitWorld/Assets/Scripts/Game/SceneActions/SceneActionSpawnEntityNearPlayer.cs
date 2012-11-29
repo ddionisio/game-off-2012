@@ -9,9 +9,9 @@ public class SceneActionSpawnEntityNearPlayer : SequencerAction {
 	public float x;
 	public float y;
 	
-	public bool useFX=false;
+	public bool useFX=true;
 	
-	public override void Start(MonoBehaviour behaviour) {
+	public override void Start(MonoBehaviour behaviour, Sequencer.StateInstance state) {
 		SceneLevel sl = SceneLevel.instance;
 		
 		Player player = sl.player;
@@ -22,8 +22,9 @@ public class SceneActionSpawnEntityNearPlayer : SequencerAction {
 			Vector2 playerPos = player.planetAttach.planetPos;
 			
 			Vector2 pos = sl.planet.body.ConvertToWorldPos(new Vector2(playerPos.x+x, playerPos.y+y));
-			
+									
 			t.position = new Vector3(pos.x, pos.y, t.position.z);
+			t.GetComponentInChildren<PlanetAttachStatic>().RefreshPos();
 		}
 	}
 }

@@ -26,7 +26,8 @@ public class PlanetBody : MonoBehaviour {
 	public Vector2 ConvertToWorldPos(Vector2 planetPos) {
 		//convert to world space
 		PolarCoord polarPos = new PolarCoord(planetPos.y + radius, (planetPos.x/surfaceLength)*PolarCoord.PI_2);
-		return polarPos.ToVector2();
+		Vector2 planetBodyPos = transform.position;
+		return planetBodyPos + polarPos.ToVector2();
 	}
 	
 	void Awake() {

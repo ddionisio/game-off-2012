@@ -173,7 +173,7 @@ public class PlayerGrabber : MonoBehaviour {
 	}
 	
 	void GrabThrow() {
-		if(Input.GetButtonDown("Fire1")) {
+		if(!mDisable && Input.GetButtonDown("Fire1")) {
 			Transform t = DetachGrab();
 			
 			mHeadSprite.Play(mHeadClipThrowId);
@@ -184,7 +184,7 @@ public class PlayerGrabber : MonoBehaviour {
 	}
 	
 	void GrabFromMouse() {
-		if(Input.GetButtonDown("Fire1")) {
+		if(!mDisable && Input.GetButtonDown("Fire1")) {
 			Main main = Main.instance;
 			Transform target = main.reticleManager.GetTarget();
 			if(target != null) {
@@ -311,46 +311,42 @@ public class PlayerGrabber : MonoBehaviour {
 	}
 	
 	void Update () {
-		if(!mDisable) {
-			switch(mCurState) {
-			case State.None:
-				if(!mDisable) {
-					LookAtMouse();
-					
-					if(mGrabTarget == null) {
-						if(!(mHeadSprite.clipId == mHeadClipIdleId || mHeadSprite.clipId == mHeadClipThrowId)) {
-							mHeadSprite.Play(mHeadClipIdleId);
-						}
-						
-						RefreshReticles();
-						GrabFromMouse();
-					}
-					else {
-						if(mHeadSprite.clipId != mHeadClipHoldId) {
-							mHeadSprite.Play(mHeadClipHoldId);
-						}
-						
-						GrabThrow();
-					}
+		switch(mCurState) {
+		case State.None:
+			LookAtMouse();
+			
+			if(mGrabTarget == null) {
+				if(!(mHeadSprite.clipId == mHeadClipIdleId || mHeadSprite.clipId == mHeadClipThrowId)) {
+					mHeadSprite.Play(mHeadClipIdleId);
 				}
-				break;
 				
-			case State.Holding:
-				LookAtMouse();
-				break;
-				
-			case State.Grabbing:
-				GrabbingUpdate(true, false);
-				break;
-				
-			case State.Grabbed:
-				GrabbingUpdate(false, false);
-				break;
-				
-			case State.Retracting:
-				GrabbingUpdate(true, true);
-				break;
+				RefreshReticles();
+				GrabFromMouse();
 			}
+			else {
+				if(mHeadSprite.clipId != mHeadClipHoldId) {
+					mHeadSprite.Play(mHeadClipHoldId);
+				}
+				
+				GrabThrow();
+			}
+			break;
+			
+		case State.Holding:
+			LookAtMouse();
+			break;
+			
+		case State.Grabbing:
+			GrabbingUpdate(true, false);
+			break;
+			
+		case State.Grabbed:
+			GrabbingUpdate(false, false);
+			break;
+			
+		case State.Retracting:
+			GrabbingUpdate(true, true);
+			break;
 		}
 	}
 	
@@ -365,5 +361,8 @@ public class PlayerGrabber : MonoBehaviour {
 	
 	void OnUIModalInactive() {
 		mDisable = false;
+	}
+	
+	void OnSceneActivate(bool activate) {
 	}
 }

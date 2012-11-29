@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections;
 
 public class SceneLevel : SceneController {
+	public const string WaveStringFormat = "CONFLICT {0}-{1}";
+	
+	[SerializeField] int numWave;
 	[SerializeField] Transform enemiesHolder;
 		
 	/// <summary>
@@ -33,12 +36,29 @@ public class SceneLevel : SceneController {
 			
 	private Player mPlayer;
 	private Planet mPlanet;
+	private int mCurWave = 0;
+	
+	public void IncWave() {
+		if(mCurWave < numWave) {
+			mCurWave++;
+		}
+		
+		Main.instance.uiManager.hud.wave.SetWave(mCurWave,numWave);
+	}
+	
+	public string GetWaveString() {
+		return string.Format(WaveStringFormat, mCurWave, numWave);
+	}
 	
 	void SceneStart() {
 		mPlayer = GetComponentInChildren<Player>();
 		mPlanet = GetComponentInChildren<Planet>();
 		
 		Main.instance.uiManager.hud.gameObject.SetActiveRecursively(true);
+		
+		mCurWave = 0;
+		
+		Main.instance.uiManager.hud.wave.SetWave(0,numWave);
 		
 		Main.instance.uiManager.hud.score.score = 0;
 		

@@ -4,9 +4,9 @@ using System.Collections;
 public class AIChangeState : SequencerAction {
 	public string toState;
 	
-	public override void Start(MonoBehaviour behaviour) {
+	public override void Start(MonoBehaviour behaviour, Sequencer.StateInstance state) {
 		if(!string.IsNullOrEmpty(toState)) {
-			((AIController)behaviour).SequenceSetState(toState);
+			((Entity)behaviour).AISetState(toState);
 		}
 	}
 }

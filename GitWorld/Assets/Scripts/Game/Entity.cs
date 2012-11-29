@@ -20,7 +20,9 @@ public class Entity : EntityBase {
 		fall,
 		mad, //cutscene purpose
 		
-		NumActions
+		NumActions,
+		
+		none = NumActions
 	}
 	
 	
@@ -35,7 +37,7 @@ public class Entity : EntityBase {
 	public Action sceneStartAction = Action.NumActions; //only use this if placing entities on level manually, otherwise just put it in numactions
 	
 	public float spawnDelay = 1.0f;
-
+	
 	protected int mCollideLayerMask = 0; //0 is none, only initialize on start
 			
 	private Action mCurAct = Action.NumActions;
@@ -48,7 +50,55 @@ public class Entity : EntityBase {
 	
 	private float mInvulDelay = 0;
 	
-	private IListener[] mListeners;	
+	private IListener[] mListeners;
+	
+	private AIState mAIStateInstance = null;
+	private string mAICurState;
+	//private bool mAIHasStarted = false;
+	
+	//AI
+	public void AIStop() {
+		if(mAIStateInstance != null) {
+			mAIStateInstance.terminate = true;
+			mAIStateInstance = null;
+			
+			mAICurState = null;
+		}
+	}
+	
+	public void AISetPause(bool pause) {
+		if(mAIStateInstance != null) {
+			mAIStateInstance.pause = pause;
+		}
+	}
+	
+	public void AISetState(string state) {
+		AIStop();
+		
+		mAICurState = state;
+		
+		mAIStateInstance = new AIState();
+		AIManager.instance.states.Start(this, mAIStateInstance, state);
+	}
+	
+	public void AIRestart() {
+		if(!string.IsNullOrEmpty(mAICurState)) {
+			AISetState(mAICurState);
+		}
+	}
+	
+	void AIChangeState(string state) {
+		AISetState(state);
+	}
+	
+	
+	public string aiCurState {
+		get {
+			return mAICurState;
+		}
+	}
+	
+	//
 	
 	public EntityStats stats {
 		get {
@@ -132,6 +182,7 @@ public class Entity : EntityBase {
 	}
 	
 	public void Release() {
+		AIStop();
 		StopAllCoroutines();
 		EntityManager.instance.Release(transform);
 	}
@@ -210,6 +261,7 @@ public class Entity : EntityBase {
 	
 	//////////internal
 	void OnDestroy() {
+		mAIStateInstance = null;
 		mListeners = null;
 	}
 	

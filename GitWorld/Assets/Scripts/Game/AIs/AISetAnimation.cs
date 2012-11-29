@@ -7,15 +7,13 @@ public class AISetAnimation : SequencerAction {
 	
 	public float wait;
 	
-	public override void Start(MonoBehaviour behaviour) {
-		AIController ai = (AIController)behaviour;
+	public override void Start(MonoBehaviour behaviour, Sequencer.StateInstance state) {
+		Entity ai = (Entity)behaviour;
 		ai.BroadcastMessage("OnAIAnimation", animations, SendMessageOptions.DontRequireReceiver);
-		ai.lastTime = Time.time;
 	}
 	
-	public override bool Update(MonoBehaviour behaviour) {
+	public override bool Update(MonoBehaviour behaviour, Sequencer.StateInstance state) {
 		//take into account time since animations were played so we are still in sync even after pause/resume of the sequencer
-		AIController ai = (AIController)behaviour;
-		return Time.time - ai.lastTime >= wait;
+		return state.IsDelayReached(wait);
 	}
 }

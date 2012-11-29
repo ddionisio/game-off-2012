@@ -30,7 +30,7 @@ public class ItemStar : Entity, Entity.IListener {
 	public float throwFadeOffDelay; //decay after thrown
 	public float fadeOffDelay; //when do we start disappearing?
 	public float dyingDelay; //duration of disappear
-	
+		
 	public bool resetMovementOnSpawn = true;
 	
 	private bool mFadeEnabled = false;
@@ -45,6 +45,8 @@ public class ItemStar : Entity, Entity.IListener {
 	
 	private LifeState mLifeState = LifeState.None;
 	
+	private bool mPlanetEnabledInitial = false;
+	
 	public bool fadeEnabled {
 		get {
 			return mFadeEnabled;
@@ -57,6 +59,8 @@ public class ItemStar : Entity, Entity.IListener {
 	
 	protected override void Awake() {
 		base.Awake();
+		
+		mPlanetEnabledInitial = planetAttach.enabled;
 		
 		mGlowPulseMinAlpha = ((float)glowPulseMinAlpha)/255.0f;
 	}
@@ -85,6 +89,7 @@ public class ItemStar : Entity, Entity.IListener {
 			
 			mLifeState = LifeState.None;
 			
+			planetAttach.enabled = mPlanetEnabledInitial;
 			planetAttach.applyOrientation = true;
 			planetAttach.applyGravity = false;
 			gameObject.layer = Main.layerItem;
@@ -185,7 +190,6 @@ public class ItemStar : Entity, Entity.IListener {
 	}
 	
 	public void OnEntityCollide(Entity other, bool youAreReceiver) {
-		//bouncing off enemy who received our 'star'tling blow! (har har!)
 		//TODO: properly bounce off from their collision, really should pass in the ray hit data
 		if((!youAreReceiver || mCollideLayerMask == Main.layerMaskEnemyComplex)
 			&& mCurBounce < numBounce && mLifeState == LifeState.Thrown) {
@@ -196,6 +200,13 @@ public class ItemStar : Entity, Entity.IListener {
 			
 			mCurBounce++;
 		}
+	}
+	
+	void Die() {
+		mCurFadeTime = 0;
+		gameObject.layer = Main.layerIgnoreRaycast;
+		mReticle = Reticle.Type.NumType;
+		mLifeState = LifeState.Dying;
 	}
 	
 	void Decay(float delay) {
@@ -241,6 +252,8 @@ public class ItemStar : Entity, Entity.IListener {
 			mCurFadeTime += Time.deltaTime;
 			if(mCurFadeTime >= dyingDelay) {
 				mLifeState = LifeState.None;
+				
+				planetAttach.enabled = mPlanetEnabledInitial;
 				EntityManager.instance.Release(transform);
 			}
 			
@@ -255,6 +268,17 @@ public class ItemStar : Entity, Entity.IListener {
 				glowSprite.color = c;
 			}
 			break;
+		}
+	}
+	
+	void OnSceneActivate(bool yes) {
+		if(!yes) {
+			switch(mLifeState) {
+			case LifeState.None:
+			case LifeState.Active:
+				Die();
+				break;
+			}
 		}
 	}
 }
