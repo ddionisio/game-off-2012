@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections;
 
 public class Player : Entity, Entity.IListener {
+	public delegate void ThrowCallback(Player player);
+	
 	public float hurtInvulDelay;
 	public float hurtDelay;
 	
@@ -20,11 +22,15 @@ public class Player : Entity, Entity.IListener {
 	
 	public Transform head;
 	
+	public ThrowCallback throwCallback=null;
+	
 	private PlayerController mController;
 	
 	private float mPlayerCurTime;
 	
 	private PlayerStats mPlayerStats;
+	
+	private bool mSceneDisable = false;
 	
 	///// implements
 	
@@ -42,6 +48,12 @@ public class Player : Entity, Entity.IListener {
 	
 	protected override void OnEnable() {
 		base.OnEnable();
+	}
+	
+	protected override void OnDestroy () {
+		base.OnDestroy ();
+		
+		throwCallback = null;
 	}
 	
 	void SetDefaultCollideMask() {
@@ -64,6 +76,9 @@ public class Player : Entity, Entity.IListener {
 	}
 	
 	public void OnGrabThrow() {
+		if(throwCallback != null) {
+			throwCallback(this);
+		}
 	}
 	
 	public void AddScore(int amt) {
@@ -77,6 +92,7 @@ public class Player : Entity, Entity.IListener {
 	}
 	
 	///// internal
+	
 	
 	// Update is called once per frame
 	void LateUpdate () {
@@ -99,12 +115,16 @@ public class Player : Entity, Entity.IListener {
 	}
 	
 	void OnUIModalActive() {
-		planetAttach.velocity.x = 0;
-		mController.enabled = false;
+		if(!mSceneDisable) { //let scene activate
+			planetAttach.velocity.x = 0;
+			mController.enabled = false;
+		}
 	}
 	
 	void OnUIModalInactive() {
-		mController.enabled = true;
+		if(!mSceneDisable) { //let scene activate
+			mController.enabled = true;
+		}
 	}
 	
 	public void OnEntityAct(Action act) {
@@ -186,12 +206,14 @@ public class Player : Entity, Entity.IListener {
 	}
 	
 	void OnSceneActivate(bool activate) {
+		mSceneDisable = !activate;
+		
 		mController.enabled = activate;
 		planetAttach.applyGravity = activate;
 		
 		if(!activate) {
-			planetAttach.velocity = Vector2.zero;
 			planetAttach.ResetCurYVel();
+			action = Entity.Action.idle;
 		}
 	}
 }

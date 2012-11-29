@@ -48,6 +48,7 @@ public class PlayerGrabber : MonoBehaviour {
 	private Vector3 mGrabDest;
 	
 	private bool mDisable = false;
+	private bool mSceneDisable = false;
 	
 	private int mHeadClipIdleId;
 	private int mHeadClipGrabId;
@@ -173,7 +174,7 @@ public class PlayerGrabber : MonoBehaviour {
 	}
 	
 	void GrabThrow() {
-		if(!mDisable && Input.GetButtonDown("Fire1")) {
+		if(!(mDisable || mSceneDisable) && Input.GetButtonDown("Fire1")) {
 			Transform t = DetachGrab();
 			
 			mHeadSprite.Play(mHeadClipThrowId);
@@ -184,7 +185,7 @@ public class PlayerGrabber : MonoBehaviour {
 	}
 	
 	void GrabFromMouse() {
-		if(!mDisable && Input.GetButtonDown("Fire1")) {
+		if(!(mDisable || mSceneDisable) && Input.GetButtonDown("Fire1")) {
 			Main main = Main.instance;
 			Transform target = main.reticleManager.GetTarget();
 			if(target != null) {
@@ -364,5 +365,6 @@ public class PlayerGrabber : MonoBehaviour {
 	}
 	
 	void OnSceneActivate(bool activate) {
+		mSceneDisable = !activate;
 	}
 }

@@ -6,7 +6,6 @@ public class SceneManager : MonoBehaviour {
 	public enum Scene {
 		main,
 		start,
-		tutorial,
 		test
 	}
 	

@@ -193,6 +193,11 @@ public class Entity : EntityBase {
 			
 	/////////////implements
 	
+	protected virtual void OnDestroy() {
+		mAIStateInstance = null;
+		mListeners = null;
+	}
+	
 	protected virtual void Awake() {
 		mStats = GetComponent<EntityStats>();
 		mPlanetAttach = GetComponent<PlanetAttach>();
@@ -260,11 +265,7 @@ public class Entity : EntityBase {
 	}
 	
 	//////////internal
-	void OnDestroy() {
-		mAIStateInstance = null;
-		mListeners = null;
-	}
-	
+		
 	IEnumerator DoSpawn() {
 		yield return new WaitForFixedUpdate();
 		

@@ -65,6 +65,12 @@ public class CameraController : MonoBehaviour {
 		}
 	}
 	
+	public bool isMoveFinish {
+		get {
+			return mCurTime >= moveDelay;
+		}
+	}
+	
 	public void CancelMove() {
 		mCurTime = moveDelay;
 	}

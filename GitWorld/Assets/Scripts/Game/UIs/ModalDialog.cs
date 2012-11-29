@@ -22,11 +22,7 @@ public class ModalDialog : UIController {
 		us.mPages = pages;
 		us.mCurPage = 0;
 		
-		UIAtlas.Sprite spr = us.portraitWidget.atlas.GetSprite(portraitRef);
-		if(spr != null) {
-			us.portraitWidget.sprite = spr;
-			us.portraitWidget.MakePixelPerfect();
-		}
+		us.portraitWidget.spriteName = portraitRef;
 		
 		us.nameWidget.text = name;
 		

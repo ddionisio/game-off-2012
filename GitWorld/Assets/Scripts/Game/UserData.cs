@@ -12,7 +12,18 @@ public class UserData : MonoBehaviour {
 	}
 	
 	public LevelState GetLevelState(int level) {
-		return (LevelState)PlayerPrefs.GetInt(levelStateKey+level, (int)LevelState.Locked);
+		LevelState ret = LevelState.Locked;
+		
+		string key = levelStateKey+level;
+		if(level == 0 && !PlayerPrefs.HasKey(key)) {
+			PlayerPrefs.SetInt(key, (int)LevelState.Unlocked);
+			ret = LevelState.Unlocked;
+		}
+		else {
+			ret = (LevelState)PlayerPrefs.GetInt(levelStateKey+level, (int)LevelState.Locked);
+		}
+		
+		return ret;
 	}
 	
 	public int GetLevelScore(int level) {

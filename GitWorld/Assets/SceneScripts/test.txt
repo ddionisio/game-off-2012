@@ -16,7 +16,7 @@
 		{ "$type":"SceneActionAnnounce",
 			"delay":"2",
 			"state":"Display",
-			"message":"COMMENCING ASSAULT"
+			"message":"ENTERING PLANET"
 		},
 		{ "$type":"SceneActionActivateEntity",
 			"entityPath":"entities/player",

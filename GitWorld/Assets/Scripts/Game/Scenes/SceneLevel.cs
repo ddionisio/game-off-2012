@@ -50,6 +50,10 @@ public class SceneLevel : SceneController {
 		return string.Format(WaveStringFormat, mCurWave, numWave);
 	}
 	
+	protected override void SequenceChangeState (string state) {
+		base.SequenceChangeState (state);
+	}
+	
 	protected override void Awake() {
 		mPlayer = GetComponentInChildren<Player>();
 		mPlanet = GetComponentInChildren<Planet>();

@@ -32,7 +32,6 @@
 		{ "$type":"SceneActionAnnounce", "delay":"2", "state":"None"}
 		
 		{ "$type":"SceneActionOpenModal",
-			"delay":"3",
 			"modal":"Victory"
 		}
 	]

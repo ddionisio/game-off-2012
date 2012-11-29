@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-//place this guy in the level, don't spawn
 public class SirRobert : Entity, Entity.IListener {
 	public Transform heartHolder;
 	
@@ -19,7 +18,7 @@ public class SirRobert : Entity, Entity.IListener {
 	private ItemHeart.State mCurHeartState;
 	private Player mPlayer = null;
 	private float mMinDist;
-			
+	
 	protected override void Awake() {
 		base.Awake();
 		
@@ -36,54 +35,70 @@ public class SirRobert : Entity, Entity.IListener {
 		mHeart.Activate(false);
 	}
 	
+	bool PlayerNeedHeal() {
+		return mPlayer.stats.curHP < healthCriteria;
+	}
+	
 	// Update is called once per frame
 	void LateUpdate () {
-		if(mPlayer == null) {
-			SceneLevel sl = SceneLevel.instance;
-			if(sl != null) {
-				mPlayer = sl.player;
+		switch(action) {
+		case Entity.Action.idle:
+		case Entity.Action.move:
+			if(mPlayer == null) {
+				SceneLevel sl = SceneLevel.instance;
+				if(sl != null) {
+					mPlayer = sl.player;
+				}
 			}
-		}
-		else {
-			bool needHeal = mPlayer.stats.curHP < healthCriteria;
-			
-			//follow player
-			if(planetAttach.GetDistanceHorizontal(mPlayer.planetAttach) > mMinDist) {
-				Vector2 dir = planetAttach.GetDirTo(mPlayer.planetAttach, true);
-				planetAttach.accel = dir*acceleration;
-				action = Entity.Action.move;
-			} 
-			else if(planetAttach.velocity.x != 0) {
-				planetAttach.velocity = Vector2.zero;
-				planetAttach.accel = Vector2.zero;
-				action = Entity.Action.idle;
-			}
-			
-			//update heart
-			switch(mCurHeartState) {
-			case ItemHeart.State.Inactive:
-				if(needHeal) {
-					mCurTime += Time.deltaTime;
-					if(mCurTime >= heartRegenDelay) {
-						mHeart.Activate(true);
+			else {
+				bool needHeal = PlayerNeedHeal();
+				
+				//follow player
+				if(planetAttach.GetDistanceHorizontal(mPlayer.planetAttach) > mMinDist) {
+					Vector2 dir = planetAttach.GetDirTo(mPlayer.planetAttach, true);
+					planetAttach.accel = dir*acceleration;
+					action = Entity.Action.move;
+				} 
+				else if(planetAttach.velocity.x != 0) {
+					planetAttach.velocity = Vector2.zero;
+					planetAttach.accel = Vector2.zero;
+					action = Entity.Action.idle;
+				}
+				
+				//update heart
+				switch(mCurHeartState) {
+				case ItemHeart.State.Inactive:
+					if(needHeal) {
+						mCurTime += Time.deltaTime;
+						if(mCurTime >= heartRegenDelay) {
+							mHeart.Activate(true);
+						}
+						
+						mMinDist = minPlayerNeedHeartDistance;
 					}
-					
-					mMinDist = minPlayerNeedHeartDistance;
+					else {
+						mMinDist = minPlayerDistance;
+					}
+					break;
 				}
-				else {
-					mMinDist = minPlayerDistance;
-				}
-				break;
 			}
+			break;
 		}
 	}
 	
-	void OnDestroy() {
+	protected override void OnDestroy() {
+		base.OnDestroy();
+		
 		mHeart = null;
 		mPlayer = null;
 	}
 	
 	public void OnEntityAct(Action act) {
+		switch(act) {
+		case Action.spawning:
+			mHeart.Activate(false);
+			break;
+		}
 	}
 	
 	public void OnEntityInvulnerable(bool yes) {
@@ -93,6 +108,7 @@ public class SirRobert : Entity, Entity.IListener {
 	}
 	
 	public void OnEntitySpawnFinish() {
+		action = Entity.Action.idle;
 	}
 			
 	void OnHeartStateChange(ItemHeart heart, ItemHeart.State state) {
@@ -116,5 +132,9 @@ public class SirRobert : Entity, Entity.IListener {
 			heart.Activate(false); //will set state to inactive
 			break;
 		}
+	}
+	
+	void OnSceneCounterCheck(Sequencer.StateInstance state) {
+		state.counter = PlayerNeedHeal() ? 0 : 1;
 	}
 }

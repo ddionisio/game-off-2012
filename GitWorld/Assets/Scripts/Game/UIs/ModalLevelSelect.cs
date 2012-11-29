@@ -3,7 +3,8 @@ using System.Collections;
 using System.Text.RegularExpressions;
 
 public class ModalLevelSelect : UIController {
-	public UIEventListener buttonTutorial;
+	public UILabel scoreLabel;
+	public string scoreFormat;
 	
 	[System.Serializable]
 	public class LevelButton {
@@ -18,6 +19,8 @@ public class ModalLevelSelect : UIController {
 	
 	public override void OnShow(bool show) {
 		if(show) {
+			int totalScore = 0;
+			
 			//determine button states
 			for(int i = 0; i < buttonLevels.Length; i++) {
 				LevelButton lb = buttonLevels[i];
@@ -43,12 +46,13 @@ public class ModalLevelSelect : UIController {
 						break;
 					}
 				}
+				
+				totalScore += Main.instance.userData.GetLevelScore(i);
 			}
+			
+			//set total score
+			scoreLabel.text = string.Format(scoreFormat, totalScore);
 		}
-	}
-	
-	void OnButtonTutorial(GameObject go) {
-		Main.instance.sceneManager.LoadScene(SceneManager.Scene.tutorial);
 	}
 	
 	void OnButtonLevel(GameObject go) {
@@ -61,8 +65,6 @@ public class ModalLevelSelect : UIController {
 	}
 			
 	void Awake() {
-		buttonTutorial.onClick += OnButtonTutorial;
-		
 		foreach(LevelButton lb in buttonLevels) {
 			UIEventListener uie = lb.button.GetComponent<UIEventListener>();
 			uie.onClick += OnButtonLevel;

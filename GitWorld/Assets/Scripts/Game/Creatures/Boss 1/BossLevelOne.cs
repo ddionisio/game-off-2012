@@ -88,7 +88,9 @@ public class BossLevelOne : CreatureBoss {
 		}
 	}
 	
-	void OnDestroy() {
+	protected override void OnDestroy() {
+		base.OnDestroy();
+		
 		mTentacleParents = null;
 		mTentacles = null;
 		

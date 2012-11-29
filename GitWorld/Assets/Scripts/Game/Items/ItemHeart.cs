@@ -65,7 +65,9 @@ public class ItemHeart : Entity, Entity.IListener {
 		}
 	}
 	
-	void OnDestroy() {
+	protected override void OnDestroy() {
+		base.OnDestroy();
+		
 		stateCallback = null;
 	}
 	

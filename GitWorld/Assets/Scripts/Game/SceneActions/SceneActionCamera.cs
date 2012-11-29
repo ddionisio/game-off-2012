@@ -6,6 +6,7 @@ public class SceneActionCamera : SequencerAction {
 	public string attachToPath = "";
 	public string attachToWaypoint = ""; //waypoint name, not path!
 	public bool immediate=true;
+	public bool waitFinish=true;
 	
 	public override void Start(MonoBehaviour behaviour, Sequencer.StateInstance state) {
 		Main.instance.cameraController.mode = mode;
@@ -32,5 +33,9 @@ public class SceneActionCamera : SequencerAction {
 		if(immediate) {
 			Main.instance.cameraController.CancelMove();
 		}
+	}
+	
+	public override bool Update(MonoBehaviour behaviour, Sequencer.StateInstance state) {
+		return immediate || !waitFinish || Main.instance.cameraController.isMoveFinish;
 	}
 }
