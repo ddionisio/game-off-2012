@@ -138,6 +138,12 @@ public class Player : Entity, Entity.IListener {
 			break;
 			
 		case Action.idle:
+			//revived!
+			if(prevAction == Entity.Action.die) {
+				Invulnerable(hurtInvulDelay);
+				mController.enabled = true;
+			}
+			
 			planetAttach.velocity = Vector2.zero;
 			break;
 			

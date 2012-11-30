@@ -133,7 +133,10 @@ public class HUDEntityStatus : MonoBehaviour {
 				mCurPanelBlinkDelay = mCurPanelFeedbackDelay = 0;
 			}
 			else { //increase
-				mHPs[mCurHP-1].onSprite.color = Color.white; //in case we increase from 1 while it's blinked out
+				if(mCurHP > 0) {
+					mHPs[mCurHP-1].onSprite.color = Color.white; //in case we increase from 1 while it's blinked out
+				}
+				
 				for(int i = mCurHP; i < mStats.curHP; i++) {
 					mHPs[i].SetOn(true);
 				}

@@ -48,7 +48,11 @@ public class ItemHeart : Entity, Entity.IListener {
 	}
 	
 	void OnGrabDone(PlayerGrabber grabber) {
-		grabber.thePlayer.stats.ApplyDamage(-1);
+		if(grabber.thePlayer.action == Entity.Action.die) {
+		}
+		else {
+			grabber.thePlayer.stats.ApplyDamage(-1);
+		}
 		
 		grabber.Retract(true);
 	}
