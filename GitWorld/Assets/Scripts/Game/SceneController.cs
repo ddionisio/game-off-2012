@@ -15,9 +15,16 @@ public class SceneController : MonoBehaviour {
 	private string mRootPath;
 	private StateData mStateInstance = null;
 	
+	private string mStartState = null;
+	
 	//only call these during inits
 	public GameObject SearchObject(string path) {
 		return GameObject.Find(mRootPath+path);
+	}
+	
+	//happens during onlevelwasloaded
+	public virtual void OnCheckPoint(SceneCheckpoint point) {
+		mStartState = !string.IsNullOrEmpty(point.state) ? point.state : null;
 	}
 	
 	protected virtual void SequenceChangeState(string state) {
@@ -36,7 +43,7 @@ public class SceneController : MonoBehaviour {
 		if(sequencer != null) {
 			//Sequencer.StateInstance
 			mStateInstance = new StateData();
-			sequencer.Start(this, mStateInstance, null);
+			sequencer.Start(this, mStateInstance, mStartState);
 		}
 	}
 	

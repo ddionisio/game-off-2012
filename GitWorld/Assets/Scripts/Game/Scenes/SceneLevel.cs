@@ -33,10 +33,20 @@ public class SceneLevel : SceneController {
 			return enemiesHolder.childCount;
 		}
 	}
+	
+	public class LevelCheckpoint : SceneCheckpoint {
+		public int curWave;
+		public Vector2 playerPlanetPos;
+		public int playerScore;
+	}
 			
 	private Player mPlayer;
 	private Planet mPlanet;
+	
 	private int mCurWave = 0;
+	private int mScore = 0;
+	
+	private LevelCheckpoint mCheckpoint = null;
 	
 	public void IncWave() {
 		if(mCurWave < numWave) {
@@ -50,13 +60,39 @@ public class SceneLevel : SceneController {
 		return string.Format(WaveStringFormat, mCurWave, numWave);
 	}
 	
+	public void SetCheckpoint() {
+		LevelCheckpoint levelState = new LevelCheckpoint();
+		levelState.state = sequencer.curState;
+		levelState.curWave = mCurWave;
+		levelState.playerScore = UIManager.instance.hud.score.score;
+		levelState.playerPlanetPos = mPlayer.planetAttach.planetPos;
+		
+		Main.instance.sceneManager.SetCheckPoint(levelState);
+	}
+	
+	
 	protected override void SequenceChangeState (string state) {
 		base.SequenceChangeState (state);
+	}
+	
+	public override void OnCheckPoint(SceneCheckpoint point) {
+		base.OnCheckPoint(point);
+		
+		mCheckpoint = (LevelCheckpoint)point;
 	}
 	
 	protected override void Awake() {
 		mPlayer = GetComponentInChildren<Player>();
 		mPlanet = GetComponentInChildren<Planet>();
+		
+		if(mCheckpoint != null) {
+			mCurWave = mCheckpoint.curWave;
+			mScore = mCheckpoint.playerScore;
+			
+			mPlayer.SetCheckpoint(mCheckpoint);
+			
+			mCheckpoint = null;
+		}
 		
 		base.Awake();
 	}
@@ -64,13 +100,11 @@ public class SceneLevel : SceneController {
 	protected override void Start() {
 		UIManager.instance.hud.gameObject.SetActiveRecursively(true);
 		
-		mCurWave = 0;
-		
 		UIManager.instance.hud.combo.gameObject.SetActiveRecursively(false);
 		
-		UIManager.instance.hud.wave.SetWave(0,numWave);
+		UIManager.instance.hud.wave.SetWave(mCurWave, numWave);
 		
-		UIManager.instance.hud.score.score = 0;
+		UIManager.instance.hud.score.score = mScore;
 		
 		UIManager.instance.hud.playerStatus.SetStats(mPlayer.stats);
 		UIManager.instance.hud.bossStatus.gameObject.SetActiveRecursively(false); //...

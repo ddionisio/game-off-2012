@@ -12,9 +12,13 @@ public class SceneManager : MonoBehaviour {
 	public const string levelString = "level";
 	
 	private SceneController mSceneController;
+	private string mCurSceneStr;
 	private string mCurLevelStr;
 	private int mCurLevel;
 	private float mPrevTimeScale;
+	
+	private SceneCheckpoint mCheckPoint = null;
+	private string mCheckPointForScene = "";
 	
 	public int curLevel {
 		get {
@@ -29,6 +33,11 @@ public class SceneManager : MonoBehaviour {
 	}
 	
 	//TODO: transitions
+	
+	public void SetCheckPoint(SceneCheckpoint check) {
+		mCheckPointForScene = mCurSceneStr;
+		mCheckPoint = check;
+	}
 		
 	public void LoadScene(Scene scene) {
 		LoadScene(scene.ToString());
@@ -41,6 +50,8 @@ public class SceneManager : MonoBehaviour {
 			mSceneController.BroadcastMessage("SceneShutdown", null, SendMessageOptions.DontRequireReceiver);
 			mSceneController = null;
 		}
+		
+		mCurSceneStr = scene;
 		
 		Application.LoadLevel(scene);
 	}
@@ -83,6 +94,13 @@ public class SceneManager : MonoBehaviour {
 	
 	void OnLevelWasLoaded(int sceneInd) {
 		InitScene();
+		
+		if(mCheckPoint != null && mCurSceneStr == mCheckPointForScene) {
+			mSceneController.OnCheckPoint(mCheckPoint);
+		}
+		
+		mCheckPoint = null;
+		mCheckPointForScene = "";
 	}
 	
 	void Awake() {

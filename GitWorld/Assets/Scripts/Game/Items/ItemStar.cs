@@ -47,6 +47,8 @@ public class ItemStar : Entity, Entity.IListener {
 	
 	private bool mPlanetEnabledInitial = false;
 	
+	private bool mSceneActive = true;
+	
 	public bool fadeEnabled {
 		get {
 			return mFadeEnabled;
@@ -231,8 +233,13 @@ public class ItemStar : Entity, Entity.IListener {
 	void LateUpdate () {
 		switch(mLifeState) {
 		case LifeState.Active:
-			Decay(fadeOffDelay);
-			PulseGlow();
+			if(mSceneActive) {
+				Decay(fadeOffDelay);
+				PulseGlow();
+			}
+			else {
+				Die();
+			}
 			break;
 			
 		case LifeState.Thrown:
@@ -268,6 +275,8 @@ public class ItemStar : Entity, Entity.IListener {
 	}
 	
 	void OnSceneActivate(bool yes) {
+		mSceneActive = yes;
+		
 		if(!yes) {
 			switch(mLifeState) {
 			case LifeState.None:

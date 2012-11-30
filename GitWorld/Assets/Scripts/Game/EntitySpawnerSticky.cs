@@ -21,6 +21,7 @@ public class EntitySpawnerSticky : MonoBehaviour {
 	private State mCurState = State.Inactive;
 	private float mCurTime = 0;
 	private PoolDataController mPoolController = null;
+	private bool mSceneActive = true;
 	
 	public void Activate(bool yes) {
 		if(yes) {
@@ -32,12 +33,13 @@ public class EntitySpawnerSticky : MonoBehaviour {
 	}
 	
 	void Start() {
-		if(activeOnStart) {
+		if(activeOnStart && mSceneActive) {
 			Activate(true);
 		}
 	}
 	
 	void OnSceneActivate(bool yes) {
+		mSceneActive = yes;
 		Activate(yes);
 	}
 	

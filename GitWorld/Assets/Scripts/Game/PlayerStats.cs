@@ -12,6 +12,10 @@ public class PlayerStats : EntityStats {
 		get {
 			return mScore+(mCurComboScore*mCurCombo);
 		}
+		
+		set {
+			mScore = value;
+		}
 	}
 	
 	public override void ResetStats () {

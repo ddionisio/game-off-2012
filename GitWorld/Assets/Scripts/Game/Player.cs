@@ -32,6 +32,13 @@ public class Player : Entity, Entity.IListener {
 	
 	private bool mSceneDisable = false;
 	
+	private SceneLevel.LevelCheckpoint mCheckPoint = null;
+	
+	//only called by level scene
+	public void SetCheckpoint(SceneLevel.LevelCheckpoint checkpoint) {
+		mCheckPoint = checkpoint;
+	}
+	
 	///// implements
 	
 	protected override void Awake() {
@@ -46,6 +53,25 @@ public class Player : Entity, Entity.IListener {
 		mController = GetComponent<PlayerController>();
 	}
 	
+	protected override void Start () {
+		base.Start();
+		
+		if(mCheckPoint != null) {
+			action = Entity.Action.idle;
+			
+			mPlayerStats.score = mCheckPoint.playerScore;
+			
+			planetAttach.planetPos = mCheckPoint.playerPlanetPos;
+			transform.position = planetAttach.planet.ConvertToWorldPos(mCheckPoint.playerPlanetPos);
+			
+			Main.instance.cameraController.attach = transform;
+			Main.instance.cameraController.mode = CameraController.Mode.Attach;
+			Main.instance.cameraController.CancelMove();
+			
+			mCheckPoint = null;
+		}
+	}
+	
 	protected override void OnEnable() {
 		base.OnEnable();
 	}
@@ -53,6 +79,7 @@ public class Player : Entity, Entity.IListener {
 	protected override void OnDestroy () {
 		base.OnDestroy ();
 		
+		mCheckPoint = null;
 		throwCallback = null;
 	}
 	

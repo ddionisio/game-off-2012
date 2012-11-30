@@ -79,17 +79,6 @@
 		
 		
 		
-		
-		{ "$type":"SceneActionSetMusic", "delay":"2", "music":"boss"},
-		
-		{ "$type":"SceneActionNewWave", "isBossAnnounce":true },
-		
-		{ "$type":"SceneActionSpawnEntityNearPlayer", "delay":"1", "type":"boss_1", "x":"50", "y":"200" },
-		
-		{ "$type":"SceneActionWaitEnemyCount", "delay":"0.5"},
-		
-		
-		
-		{ "$type":"SequencerActionChangeState", "delay":"1", "state":"victory" }
+		{ "$type":"SequencerActionChangeState", "delay":"1", "state":"boss" }
 	]
 }

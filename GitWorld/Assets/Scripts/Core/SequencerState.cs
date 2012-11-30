@@ -7,7 +7,14 @@ public class SequencerState {
 	public Sequencer.StateData[] sequences;
 	public string sequenceDefaultState;
 	
+	private string mCurState;
 	private Dictionary<string, Sequencer> mSequences;
+	
+	public string curState {
+		get {
+			return mCurState;
+		}
+	}
 	
 	public void Load() {
 		mSequences = Sequencer.Load(sequences);
@@ -17,6 +24,8 @@ public class SequencerState {
 		if(stateName == null) {
 			stateName = sequenceDefaultState;
 		}
+		
+		mCurState = stateName;
 		
 		if(!string.IsNullOrEmpty(stateName)) {
 			if(mSequences != null) {
