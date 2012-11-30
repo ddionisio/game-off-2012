@@ -26,7 +26,7 @@ public class AISetVelocity : SequencerAction {
 				aiState.curPlanetDir = pa.GetDirTo(player.planetAttach, followPlayerHorizontal);
 			}
 			else if(!useDir) {
-				aiState.curPlanetDir = Util.Vector2DRot(new Vector2(-1, 0), angle*Mathf.Deg2Rad);
+				aiState.curPlanetDir = Util.Vector2DRot(new Vector2(1, 0), angle*Mathf.Deg2Rad);
 			}
 			
 			pa.velocity = aiState.curPlanetDir*speed;

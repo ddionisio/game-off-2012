@@ -10,6 +10,8 @@ public class HUDInterface : MonoBehaviour {
 	public HUDScore score;
 	public HUDCombo combo;
 	
+	public HUDPointAt pointer;
+	
 	// Use this for initialization
 	void Start () {
 	

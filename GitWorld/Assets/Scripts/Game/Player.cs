@@ -82,7 +82,7 @@ public class Player : Entity, Entity.IListener {
 	}
 	
 	public void AddScore(int amt) {
-		if(mPlayerStats != null) {
+		if(mPlayerStats != null && amt > 0) {
 			mPlayerStats.AddScore(amt);
 		}
 	}

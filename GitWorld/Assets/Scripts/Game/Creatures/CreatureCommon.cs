@@ -11,6 +11,7 @@ public class CreatureCommon : Entity, Entity.IListener {
 	public float stunDelay = 3; //set to zero for no stun, die right away. use for certain enemies
 	public float reviveDelay = 2; 
 	public float dieDelay = 2;
+	public float invulDelayAfterSpawn = 0;
 	
 	public bool applyGravity = true;
 	public bool isComplex = false; //for bosses or large enemies with collision other than sphere
@@ -23,6 +24,8 @@ public class CreatureCommon : Entity, Entity.IListener {
 	
 	private Vector2 mPrevVelocity;
 	private Vector2 mPrevAccel;
+	
+	private bool mIsHurt=false; //in case action is overriden
 	
 	protected override void Awake() {
 		base.Awake();
@@ -65,6 +68,10 @@ public class CreatureCommon : Entity, Entity.IListener {
 		switch(act) {
 		case Action.spawning:
 			ResetCommonData();
+			
+			if(invulDelayAfterSpawn > 0) {
+				Invulnerable(invulDelayAfterSpawn);
+			}
 			break;
 			
 		case Action.idle:
@@ -72,6 +79,8 @@ public class CreatureCommon : Entity, Entity.IListener {
 			break;
 			
 		case Action.hurt:
+			mIsHurt = true;
+			
 			Invulnerable(hurtDelay);
 			
 			mPrevVelocity = planetAttach.velocity;
@@ -143,8 +152,12 @@ public class CreatureCommon : Entity, Entity.IListener {
 		}
 		
 		//after invul wears off and we are hurt, resume activity
-		if(!yes && action == Entity.Action.hurt) {
-			action = prevAction;
+		if(!yes && mIsHurt) {
+			mIsHurt = false;
+			
+			if(action == Entity.Action.hurt && prevAction != Entity.Action.hurt) //for some odd reason
+				action = prevAction;
+			
 			planetAttach.velocity = mPrevVelocity;
 			planetAttach.accel = mPrevAccel;
 			
@@ -212,6 +225,7 @@ public class CreatureCommon : Entity, Entity.IListener {
 			gameObject.layer = isComplex ? Main.layerEnemyComplex : Main.layerEnemy;
 		}
 		
+		mIsHurt = false;
 		mReticle = Reticle.Type.NumType;
 		mCurEnemyTime = 0;
 		mPrevVelocity = Vector2.zero;

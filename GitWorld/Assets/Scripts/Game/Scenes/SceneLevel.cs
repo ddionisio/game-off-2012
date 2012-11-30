@@ -75,6 +75,8 @@ public class SceneLevel : SceneController {
 		UIManager.instance.hud.playerStatus.SetStats(mPlayer.stats);
 		UIManager.instance.hud.bossStatus.gameObject.SetActiveRecursively(false); //...
 		
+		UIManager.instance.hud.pointer.SetPOI(null);
+		
 		base.Start();
 	}
 	

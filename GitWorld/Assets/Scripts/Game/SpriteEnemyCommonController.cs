@@ -17,7 +17,7 @@ public class SpriteEnemyCommonController : SpriteEntityController {
 		base.Update();
 		
 		//set to fall state if applicable
-		if(creature != null && creature.planetAttach.applyGravity && creature.action != Entity.Action.hurt) {
+		if(creature != null && creature.planetAttach.applyGravity) {
 			if(creature.planetAttach.GetCurYVel() < 0) {
 				PlayAnim(Entity.Action.fall);	
 			}
@@ -59,14 +59,8 @@ public class SpriteEnemyCommonController : SpriteEntityController {
 	void OnPlanetLand(PlanetAttach pa) {
 		//perform proper animation
 		if(creature != null) {
-			switch(creature.action) {
-			case Entity.Action.hurt:
-				break;
-			default:
-				if(creature.action != Entity.Action.NumActions)
-					PlayAnim(creature.action);
-				break;
-			}
+			if(creature.action != Entity.Action.NumActions)
+				PlayAnim(creature.action);
 		}
 	}
 	

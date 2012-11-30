@@ -35,6 +35,10 @@ public class SpriteEntityController : MonoBehaviour, Entity.IListener {
 		}
 	}
 	
+	protected bool HasAnim(Entity.Action act) {
+		return mActionAnimIds[(int)act] != -1;
+	}
+	
 	protected void PlayAnim(Entity.Action act) {
 		if(mSpriteAnim != null) {
 			if(mActionAnimIds == null) {

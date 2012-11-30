@@ -226,7 +226,7 @@ public class BossLevelOne : CreatureBoss {
 		//tentacle was eaten, get back to moving
 		if(mStatus == Status.TentacleEaten && !yes) {
 			SetTentacleVulnerable(true);
-			SetStatus(Status.Active);
+			mStatus = Status.Active;
 		}
 	}
 	

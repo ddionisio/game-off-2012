@@ -40,6 +40,9 @@ public class Entity : EntityBase {
 	
 	protected int mCollideLayerMask = 0; //0 is none, only initialize on start
 			
+	private const float mCollisionCastZ = -1000.0f;
+	private const float mCollisionDistance = 2000.0f;
+	
 	private Action mCurAct = Action.NumActions;
 	private Action mPrevAct = Action.NumActions;
 	
@@ -239,7 +242,9 @@ public class Entity : EntityBase {
 			if(mListeners.Length > 0 && mCollideLayerMask > 0 && mPlanetAttach != null) {
 				float radius = mPlanetAttach.radius;
 				RaycastHit hit;
-				if(Physics.SphereCast(transform.position, radius, new Vector3(0,0,1.0f), out hit, 1.0f, mCollideLayerMask)) {
+				//TODO: send RaycastHit
+				Vector3 castPos = transform.position; castPos.z = mCollisionCastZ;
+				if(Physics.SphereCast(castPos, radius, new Vector3(0,0,1.0f), out hit, mCollisionDistance, mCollideLayerMask)) {
 					Entity e = hit.transform.GetComponent<Entity>();
 					if(e != null) {
 						foreach(IListener l in mListeners) {

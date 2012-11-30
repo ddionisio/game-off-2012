@@ -40,7 +40,7 @@ public class AIFollowPlayerAccel : SequencerAction {
 		}
 		
 		if(doneAfterNumChangeDir > 0) {
-			done = doneAfterNumChangeDir == aiState.counter && Vector2.Dot(pa.velocity, aiState.curPlanetDir) > 0.0f;
+			done = doneAfterNumChangeDir == aiState.counter && Vector2.Dot(pa.planetDir, aiState.curPlanetDir) > 0.0f;
 		}
 		
 		//pa.velocity = Vector2.zero;

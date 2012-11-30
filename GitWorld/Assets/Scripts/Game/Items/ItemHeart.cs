@@ -48,6 +48,8 @@ public class ItemHeart : Entity, Entity.IListener {
 	}
 	
 	void OnGrabDone(PlayerGrabber grabber) {
+		grabber.thePlayer.stats.ApplyDamage(-1);
+		
 		grabber.Retract(true);
 	}
 	
@@ -57,8 +59,6 @@ public class ItemHeart : Entity, Entity.IListener {
 	void OnGrabRetractEnd(PlayerGrabber grabber) {
 		//make something happen
 		grabber.DetachGrab();
-		
-		grabber.thePlayer.stats.ApplyDamage(-1);
 		
 		if(stateCallback != null) {
 			stateCallback(this, State.Eaten);
