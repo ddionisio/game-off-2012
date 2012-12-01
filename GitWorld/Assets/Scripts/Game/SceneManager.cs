@@ -11,6 +11,8 @@ public class SceneManager : MonoBehaviour {
 	
 	public const string levelString = "level";
 	
+	public ScreenTransition screenTransition;
+	
 	private SceneController mSceneController;
 	private string mCurSceneStr;
 	private string mCurLevelStr;
@@ -19,6 +21,10 @@ public class SceneManager : MonoBehaviour {
 	
 	private SceneCheckpoint mCheckPoint = null;
 	private string mCheckPointForScene = "";
+	
+	private bool mFirstTime = true;
+	
+	private string mSceneToLoad = null;
 	
 	public int curLevel {
 		get {
@@ -32,8 +38,6 @@ public class SceneManager : MonoBehaviour {
 		}
 	}
 	
-	//TODO: transitions
-	
 	public void SetCheckPoint(SceneCheckpoint check) {
 		mCheckPointForScene = mCurSceneStr;
 		mCheckPoint = check;
@@ -44,16 +48,15 @@ public class SceneManager : MonoBehaviour {
 	}
 	
 	public void LoadScene(string scene) {
-		Main.instance.BroadcastMessage("SceneShutdown", null, SendMessageOptions.DontRequireReceiver);
+		mSceneToLoad = scene;
 		
-		if(mSceneController != null) {
-			mSceneController.BroadcastMessage("SceneShutdown", null, SendMessageOptions.DontRequireReceiver);
-			mSceneController = null;
+		if(mFirstTime) {
+			screenTransition.state = ScreenTransition.State.Done;
+			DoLoad();
 		}
-		
-		mCurSceneStr = scene;
-		
-		Application.LoadLevel(scene);
+		else {
+			screenTransition.state = ScreenTransition.State.Out;
+		}
 	}
 	
 	public void LoadLevel(int level) {
@@ -101,9 +104,49 @@ public class SceneManager : MonoBehaviour {
 		
 		mCheckPoint = null;
 		mCheckPointForScene = "";
+		
+		if(screenTransition.state == ScreenTransition.State.Done) { //we were at out a while back
+			mFirstTime = false;
+			StartCoroutine(DoScreenTransitionIn());
+		}
 	}
 	
 	void Awake() {
 		mPrevTimeScale = Time.timeScale;
+		
+		screenTransition.finishCallback = OnScreenTransitionFinish;
+	}
+	
+	void OnScreenTransitionFinish(ScreenTransition.State state) {
+		switch(state) {
+		case ScreenTransition.State.In:
+			//notify?
+			break;
+			
+		case ScreenTransition.State.Out:
+			DoLoad();
+			break;
+		}
+	}
+	
+	void DoLoad() {
+		Main.instance.BroadcastMessage("SceneShutdown", null, SendMessageOptions.DontRequireReceiver);
+		
+		if(mSceneController != null) {
+			mSceneController.BroadcastMessage("SceneShutdown", null, SendMessageOptions.DontRequireReceiver);
+			mSceneController = null;
+		}
+		
+		mCurSceneStr = mSceneToLoad;
+		
+		Application.LoadLevel(mSceneToLoad);
+	}
+	
+	IEnumerator DoScreenTransitionIn() {
+		yield return new WaitForFixedUpdate();
+		
+		screenTransition.state = ScreenTransition.State.In;
+		
+		yield break;
 	}
 }
