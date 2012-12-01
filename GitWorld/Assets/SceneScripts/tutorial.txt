@@ -123,7 +123,7 @@
 			"name":"Steve",
 			"portrait":"portrait_jumper",
 			"texts":[
-				"Yeah well bite me!"]
+				"Bite me!"]
 		},
 		
 		{ "$type":"SceneActionCamera",

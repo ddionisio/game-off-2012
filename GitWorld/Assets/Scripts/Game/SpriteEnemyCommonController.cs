@@ -17,7 +17,7 @@ public class SpriteEnemyCommonController : SpriteEntityController {
 		base.Update();
 		
 		//set to fall state if applicable
-		if(creature != null && creature.planetAttach.applyGravity) {
+		if(creature != null && creature.planetAttach.applyGravity && creature.action != Entity.Action.stunned) {
 			if(creature.planetAttach.GetCurYVel() < 0) {
 				PlayAnim(Entity.Action.fall);	
 			}
