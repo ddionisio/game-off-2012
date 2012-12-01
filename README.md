@@ -1,8 +1,7 @@
 [gitgirl1]: http://renegadeware.com/web_games/gitgirl/
 [newgrounds]: http://www.newgrounds.com/
 
-# Super GitGirl
-![Hey! It's me!](http://renegadeware.com/images/main_menu.png)
+![Hey! It's me!](http://renegadeware.com/web_games/gitgirl/gitgirl.png)
 
 Click [here][gitgirl1] to play.
 
@@ -10,6 +9,10 @@ Click [here][gitgirl1] to play.
 ![screenshot](http://renegadeware.com/web_games/gitgirl/gitgirl_shot_1.png) ![screenshot](http://renegadeware.com/web_games/gitgirl/gitgirl_shot_2.png)
 ![screenshot](http://renegadeware.com/web_games/gitgirl/gitgirl_shot_3.png)
 ![screenshot](http://renegadeware.com/web_games/gitgirl/gitgirl_shot_4.png)
+
+##About the game
+GitGirl employs the power of her hair to resolve all the conflicts that plague across the vast repositories of GitHub.  With the power of her Intergalactic Space-Hair, she can push and pull her way into victory.
+
 ##Tools Used
 * Unity 3D
 * Adobe Photoshop
@@ -42,5 +45,4 @@ Click [here][gitgirl1] to play.
 * Make level 1 more challenging, aside from the boss.
 * More levels...
 * Better art.
-* Some sort of story.
 * Sleep.
