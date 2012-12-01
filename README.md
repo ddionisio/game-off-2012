@@ -6,6 +6,10 @@
 
 Click [here][gitgirl1] to play.
 
+##Screenshots
+![screenshot](http://renegadeware.com/web_games/gitgirl/gitgirl_shot_1.png) ![screenshot](http://renegadeware.com/web_games/gitgirl/gitgirl_shot_2.png)
+![screenshot](http://renegadeware.com/web_games/gitgirl/gitgirl_shot_3.png)
+![screenshot](http://renegadeware.com/web_games/gitgirl/gitgirl_shot_4.png)
 ##Tools Used
 * Unity 3D
 * Adobe Photoshop
@@ -34,7 +38,9 @@ Click [here][gitgirl1] to play.
 
 ![newgrounds](http://renegadeware.com/images/newgrounds-icon-small.png)
 
-## Bullshots
-:neckbeard:
-
-## Unrelated Video
+##Things I didn't have time for:
+* Make level 1 more challenging, aside from the boss.
+* More levels...
+* Better art.
+* Some sort of story.
+* Sleep.
