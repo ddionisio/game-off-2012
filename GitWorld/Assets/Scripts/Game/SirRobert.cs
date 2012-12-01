@@ -4,6 +4,8 @@ using System.Collections;
 public class SirRobert : Entity, Entity.IListener {
 	public Transform heartHolder;
 	
+	public tk2dBaseSprite heartGlow;
+	
 	public float heartRegenDelay = 3.0f;
 	
 	public int healthCriteria = 3;
@@ -13,8 +15,11 @@ public class SirRobert : Entity, Entity.IListener {
 	
 	public float acceleration;
 	
+	public float heartGlowPulsePerSecond;
+	
 	private ItemHeart mHeart;
 	private float mCurTime = 0;
+	private float mCurHeartGlowTime = 0;
 	private ItemHeart.State mCurHeartState;
 	private Player mPlayer = null;
 	private float mMinDist;
@@ -80,6 +85,21 @@ public class SirRobert : Entity, Entity.IListener {
 						mMinDist = minPlayerDistance;
 					}
 					break;
+				}
+				
+				if(needHeal) {
+					if(!heartGlow.gameObject.active) {
+						heartGlow.gameObject.active = true;
+					}
+					
+					mCurHeartGlowTime += Time.deltaTime;
+					float t = Mathf.Sin(Mathf.PI*mCurHeartGlowTime*heartGlowPulsePerSecond);
+					t *= t;
+					Color c = heartGlow.color; c.a = t;
+					heartGlow.color = c;
+				}
+				else if(heartGlow.gameObject.active) {
+					heartGlow.gameObject.active = false;
 				}
 			}
 			break;

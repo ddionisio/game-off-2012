@@ -98,9 +98,13 @@ public class HUDEntityStatus : MonoBehaviour {
 		}
 		
 		if(portraitWidget != null) {
-			UIAtlas.Sprite spr = portraitWidget.atlas.GetSprite(mStats.portrait);
-			if(spr != null) {
-				portraitWidget.sprite = spr;
+			if(!string.IsNullOrEmpty(mStats.portrait)) {
+				portraitWidget.gameObject.SetActiveRecursively(true);
+				portraitWidget.spriteName = mStats.portrait;
+				portraitWidget.MakePixelPerfect();
+			}
+			else {
+				portraitWidget.gameObject.SetActiveRecursively(false);
 			}
 		}
 	}

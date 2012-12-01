@@ -151,8 +151,8 @@
 			"texts":[
 				"That hit the spot!",
 				"By the way...",
-				"If you have noticed, touching a conflict can hurt you. Causing a lost of heart.",
-				"Losing all of your heart will result in terrible frustration.",
+				"If you have noticed, touching a conflict can hurt you. Causing a loss of heart.",
+				"Losing all of your heart will result in a terrible frustration.",
 				"Thus, there is a creature to help you replenish your heart."]
 		},
 		
@@ -175,7 +175,7 @@
 			"portrait":"portrait_hair",
 			"texts":[
 				"He goes by the name of Chesterton.",
-				"If your health reaches one, he'll be able to provide you with a heart.",
+				"If your heart count reaches one, Chesterton will be able to provide you with another one.",
 				"Remember, only if you have one heart left."]
 		},
 		
@@ -205,7 +205,7 @@
 			"portrait":"portrait_hair",
 			"texts":[
 				"Chesterton will begin to spawn a heart.",
-				"Once fully spawned, make sure to pull the heart."]
+				"Once the heart is fully spawned, make sure to pull it."]
 		}
 		
 		{ "$type":"SceneActionEntityAction",
@@ -230,7 +230,7 @@
 			"texts":[
 				"Excellent!",
 				"And that concludes the tutorial!",
-				"Go forth and resolves the conflicts that plague across the vast repositories of Git!",
+				"Go forth and resolve the conflicts that plague across the vast repositories of Git!",
 				"Become the beacon of hope!"]
 		},
 		

@@ -55,6 +55,8 @@ public class PlayerGrabber : MonoBehaviour {
 	public int mHeadClipHoldId;
 	public int mHeadClipThrowId;
 	
+	private Reticle mReticleCheck;
+	
 	public State state {
 		get {
 			return mCurState;
@@ -164,12 +166,21 @@ public class PlayerGrabber : MonoBehaviour {
 		}
 		
 		//Main.instance.reticleManager.ActivateInRange(head.position, radius, mLayerMasksGrab);
-		
-		Main.instance.reticleManager.DeactivateAll();
-		
+						
 		RaycastHit hit;
 		if(Physics.Raycast(headPos, dir, out hit, len, mLayerMasksGrab)) {
-			Main.instance.reticleManager.Activate(hit.transform);
+			if(mReticleCheck == null || hit.transform != mReticleCheck.transform.parent) {
+				Main.instance.reticleManager.DeactivateAll();
+				mReticleCheck = Main.instance.reticleManager.Activate(hit.transform);
+			}
+			else if(mReticleCheck.entity == null || mReticleCheck.entity.reticle == Reticle.Type.NumType) {
+				Main.instance.reticleManager.DeactivateAll();
+				mReticleCheck = null;
+			}
+		}
+		else {
+			Main.instance.reticleManager.DeactivateAll();
+			mReticleCheck=null;
 		}
 	}
 	

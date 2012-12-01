@@ -69,16 +69,6 @@
 		{ "$type":"SceneActionWaitEnemyCount", "delay":"0.5"},
 		
 		
-		
-		{ "$type":"SceneActionActivateEntityType",
-			"type":"EntitySpawnerSticky", "activate":false
-		},
-		{ "$type":"SceneActionActivateEntityType",
-			"type":"ItemStar", "activate":false
-		},
-		
-		
-		
 		{ "$type":"SequencerActionChangeState", "delay":"1", "state":"boss" }
 	]
 }

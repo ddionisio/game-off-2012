@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class ReticleManager : MonoBehaviour {
-	public const float childZOfs = -0.1f;
+	public const float childZOfs = -2.0f;
 	
 	//all inactive reticles are children
 	public Transform template;
@@ -68,7 +68,8 @@ public class ReticleManager : MonoBehaviour {
 				//add child to attachee, then switch its layer to target for grabbing
 				child.parent = attachTo;
 				Transform childTrans = child.transform;
-				childTrans.localPosition = new Vector3(0, 0, childZOfs);
+				Vector2 parentPos = child.parent.position;
+				childTrans.position = new Vector3(parentPos.x, parentPos.y, childZOfs);
 				childTrans.localRotation = Quaternion.identity;
 				childTrans.localScale = Vector3.one;
 				
@@ -83,7 +84,7 @@ public class ReticleManager : MonoBehaviour {
 				ent.OnTargetted(true);
 			}
 									
-			ret.Activate(reticleType);
+			ret.Activate(reticleType, ent);
 		}
 		
 		return ret;
