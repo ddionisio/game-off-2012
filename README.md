@@ -1,3 +1,8 @@
+GitGirl
+=======
+
+GitGirl employs the power of her hair to resolve all the conflicts that plague across the vast repositories of GitHub.  With the power of her Intergalactic Space-Hair, she can push and pull her way into victory.
+
 [gitgirl1]: http://renegadeware.com/web_games/gitgirl/
 [newgrounds]: http://www.newgrounds.com/
 
@@ -9,9 +14,6 @@ Click [here][gitgirl1] to play.
 ![screenshot](http://renegadeware.com/web_games/gitgirl/gitgirl_shot_1.png) ![screenshot](http://renegadeware.com/web_games/gitgirl/gitgirl_shot_2.png)
 ![screenshot](http://renegadeware.com/web_games/gitgirl/gitgirl_shot_3.png)
 ![screenshot](http://renegadeware.com/web_games/gitgirl/gitgirl_shot_4.png)
-
-##About the game
-GitGirl employs the power of her hair to resolve all the conflicts that plague across the vast repositories of GitHub.  With the power of her Intergalactic Space-Hair, she can push and pull her way into victory.
 
 ##Tools Used
 * Unity 3D
